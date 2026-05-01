@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* Global styles and theme variables */
+@theme {
+  --color-brand-blue: #2c94de;
+  --color-brand-blue-hover: #1a78bc;
+  --color-brand-dark: #1e293b;
+}
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px; /* Vertical scrollbar width */
+    height: 6px; /* Horizontal scrollbar height */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent; /* Makes the track invisible */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 20px; /* Fully rounded handle */
+  }
+}
