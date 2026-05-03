@@ -1,8 +1,9 @@
 const Sidebar = () => {
   const history = Array.from({ length: 20 }, (_, i) => (
     <a
+      key={i}
       href="#"
-      className="w-full text-md rounded-xl p-1 transition-colors hover:bg-neutral-100 cursor-pointer whitespace-nowrap overflow-x-clip text-ellipsis"
+      className="w-full rounded-xl p-1 transition-colors hover:bg-neutral-100 cursor-pointer whitespace-nowrap overflow-x-clip text-ellipsis"
     >
       Lorem ipsum dolor sit amet consectetur
     </a>
