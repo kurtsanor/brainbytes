@@ -3,7 +3,7 @@ const Sidebar = () => {
     <a
       key={i}
       href="#"
-      className="w-full rounded-xl p-1 transition-colors hover:bg-neutral-100 cursor-pointer whitespace-nowrap overflow-x-clip text-ellipsis"
+      className="w-full rounded-lg py-1 px-2 transition-colors hover:bg-neutral-100 cursor-pointer whitespace-nowrap overflow-x-clip text-ellipsis"
     >
       Lorem ipsum dolor sit amet consectetur
     </a>
@@ -11,19 +11,19 @@ const Sidebar = () => {
 
   return (
     <aside className="flex flex-col w-66 border-r border-neutral-100 overflow-auto">
-      <header className="flex flex-col border-b border-neutral-100 mb-2 p-1.5">
-        <div className="flex items-center h-10">
+      <header className="flex flex-col p-1.5">
+        <div className="flex items-center h-10 pl-2">
           <img
             src="/brains.png"
             alt="BrainBytes Logo"
-            className="w-6 h-6 mr-1"
+            className="w-6 h-6 mr-1 object-contain"
           />
-          <h1 className="text-center text-xl font-semibold">BrainBytes</h1>
+          <h1 className="text-xl font-semibold tracking-tight">BrainBytes</h1>
         </div>
       </header>
       <section className="p-2 mb-2">
         {/* New chat button */}
-        <button className="flex items-center justify-center gap-2 w-full rounded-xl bg-black text-white p-1.5 transition-colors hover:bg-neutral-700 cursor-pointer">
+        <button className="flex items-center justify-center gap-2 w-full rounded-lg bg-black text-white p-1.5 transition-colors hover:bg-neutral-700 cursor-pointer">
           {/* Plus Icon SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"

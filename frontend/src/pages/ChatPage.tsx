@@ -1,36 +1,79 @@
-import { useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import { getMessages, sendMessage } from "../api/message.api";
+import type { Message } from "../types/message.type";
 
 interface ChatInputProps {
   chatBoxStyle: string;
   handleSend: (message: string) => void;
+  isTyping: boolean;
 }
 
 interface MessageBubbleProps {
-  message: string;
+  message: Message;
   isUser: boolean;
 }
 
 const ChatPage = () => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const { data, isLoading, isError } = useQuery<{ messages: Message[] }>({
+    queryKey: ["messages"],
+    queryFn: getMessages,
+  });
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [data]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const sendMutation = useMutation({
+    mutationFn: sendMessage,
+    onSuccess: (newMessage) => {
+      queryClient.invalidateQueries({ queryKey: ["messages"] });
+      setIsTyping(false);
+    },
+    onError: (error) => {
+      console.error("Error sending message:", error);
+    },
+  });
+
+  // Handle Loading
+  if (isLoading) return <div>Loading messages...</div>;
+
+  // Handle Error
+  if (isError || !data) return <div>Error loading messages.</div>;
+
   const chatBoxStyle =
-    messages.length > 0
+    data?.messages.length > 0
       ? "bg-white flex flex-col w-full border border-neutral-200 rounded-lg focus:outline-none p-3"
       : "flex flex-col w-full border border-neutral-200 rounded-lg focus:outline-none p-3";
 
-  const heroTextStyle = messages.length < 1 ? "items-center" : "";
+  const heroTextStyle = data?.messages.length < 1 ? "items-center" : "";
 
   const handleSend = (message: string) => {
     if (!message.trim()) {
       return;
     }
-    setMessages((prevMessages) => [...prevMessages, message]);
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    queryClient.setQueryData<{ messages: Message[] }>(
+      ["messages"],
+      (oldData) => {
+        const newMessage: any = {
+          _id: Date.now().toString(),
+          text: message,
+        };
+        return {
+          messages: [...(oldData?.messages || []), newMessage],
+        };
+      },
+    );
+    setIsTyping(true);
+    sendMutation.mutate(message);
   };
 
-  const messagesList = messages.map((msg, index) => {
+  const messagesList = data?.messages?.map((msg, index) => {
     const isUser = index % 2 === 0;
     return <MessageBubble key={index} message={msg} isUser={isUser} />;
   });
@@ -40,14 +83,46 @@ const ChatPage = () => {
       className={`flex min-h-screen flex-col ${heroTextStyle} justify-center px-40 pt-5`}
     >
       {/* Show welcome message if no messages */}
-      {messages.length === 0 && <ChatHeader />}
+      {data.messages?.length === 0 && <ChatHeader />}
       {messagesList}
-      <div ref={scrollRef} className="text-transparent">
-        this is a dummy element to scroll into view
-      </div>
+      {isTyping && (
+        <div className="flex items-center justify-start mb-8 space-x-3">
+          {/* Flat Sparkle Logo SVG */}
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {/* Main Large Sparkle*/}
+            <path
+              d="M12 3L14.5 9.5L21 12L14.5 14.5L12 21L9.5 14.5L3 12L9.5 9.5L12 3Z"
+              fill="#2c94de"
+            />
+            {/* Small Top Sparkle*/}
+            <path
+              d="M18 4L18.7 5.3L20 6L18.7 6.7L18 8L17.3 6.7L16 6L17.3 5.3L18 4Z"
+              fill="#2c94de"
+            />
+            {/* Small Bottom Sparkle*/}
+            <path
+              d="M18 16L18.7 17.3L20 18L18.7 18.7L18 20L17.3 18.7L16 18L17.3 17.3L18 16Z"
+              fill="#2c94de"
+            />
+          </svg>
+
+          <p>BrainBytes is thinking...</p>
+        </div>
+      )}
+      <div ref={scrollRef} className="text-transparent border" />
       {/* Text Area layout */}
-      <div className="w-full mt-10 sticky pb-3 bottom-0 z-100 bg-white">
-        <ChatInput chatBoxStyle={chatBoxStyle} handleSend={handleSend} />
+      <div className="w-full mt-5 sticky pb-3 bottom-0 z-100 bg-white">
+        <ChatInput
+          chatBoxStyle={chatBoxStyle}
+          handleSend={handleSend}
+          isTyping={isTyping}
+        />
         <Disclaimer />
       </div>
     </div>
@@ -70,16 +145,16 @@ const ChatHeader = () => {
 
 const MessageBubble = ({ message, isUser }: MessageBubbleProps) => {
   const alignment = isUser ? "justify-end" : "justify-start";
-  const bgColor = isUser ? "bg-neutral-100" : "";
+  const bgColor = isUser ? "bg-neutral-100 max-w-[70%] p-3" : "";
 
   return (
-    <div className={`flex ${alignment}`}>
-      <p className={`p-3 rounded-lg ${bgColor} max-w-[70%]`}>{message}</p>
+    <div className={`flex ${alignment} mb-8`}>
+      <p className={`rounded-lg ${bgColor}`}>{message.text}</p>
     </div>
   );
 };
 
-const ChatInput = ({ chatBoxStyle, handleSend }: ChatInputProps) => {
+const ChatInput = ({ chatBoxStyle, handleSend, isTyping }: ChatInputProps) => {
   const [messageInput, setMessageInput] = useState("");
 
   const executeSend = () => {
@@ -90,6 +165,7 @@ const ChatInput = ({ chatBoxStyle, handleSend }: ChatInputProps) => {
   return (
     <div className={chatBoxStyle}>
       <textarea
+        disabled={isTyping}
         rows={2}
         className="w-full resize-none focus:outline-none mb-5"
         placeholder="How can I help you today?"
@@ -98,6 +174,7 @@ const ChatInput = ({ chatBoxStyle, handleSend }: ChatInputProps) => {
       />
       <div className="flex justify-end">
         <button
+          disabled={isTyping}
           className="p-1.5 bg-brand-blue text-white rounded-lg hover:bg-brand-blue-hover transition-colors disabled:bg-gray-300 cursor-pointer"
           aria-label="Send message"
           onClick={executeSend}

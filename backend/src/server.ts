@@ -1,6 +1,7 @@
 import "dotenv/config";
 import app from "./app.js";
 import connectToDatabase from "./config/db.js";
+import { initializeAi } from "./services/ai.service.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -10,6 +11,9 @@ app.get("/", (req, res) => {
 
 // Establish database connection
 await connectToDatabase();
+
+// Initialize AI service
+initializeAi();
 
 // Start the server
 app.listen(PORT, () => {
