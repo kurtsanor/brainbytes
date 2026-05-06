@@ -7,9 +7,9 @@ export const createMessage = async (
   try {
     const userMessage = await Message.create({ text, isUser: true });
 
-    // Generate AI response with a 15-second overall timeout
+    // Generate AI response with a 60-second overall timeout
     const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Request timeout")), 15000),
+      setTimeout(() => reject(new Error("Request timeout")), 60000),
     );
 
     const aiResultPromise = aiService.generateResponse(text);

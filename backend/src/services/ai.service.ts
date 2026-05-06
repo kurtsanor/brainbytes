@@ -67,7 +67,7 @@ export const generateResponse = async (
 
   // Use AbortController for timeout
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+  const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
 
   try {
     const systemInstruction = {
@@ -78,7 +78,7 @@ export const generateResponse = async (
       ],
     };
     const response = await geminiAxios.post(
-      "/models/gemini-3-flash-preview:generateContent",
+      "/models/gemini-3.1-flash-lite-preview:generateContent",
       {
         systemInstruction,
         contents: [{ parts: [{ text: question }] }],
