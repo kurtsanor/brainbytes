@@ -25,7 +25,7 @@ BrainBytes is an AI-powered tutoring platform designed to provide accessible aca
 
 - **Docker**: v20.x or higher
 - **Docker Compose**: v2.x or higher
-- **Google Gemini API Key**
+- **Hugging Face API Token**
 
 _Note: MongoDB Atlas is NOT needed for Docker Compose. A local MongoDB container is included automatically._
 
@@ -36,15 +36,15 @@ _Note: MongoDB Atlas is NOT needed for Docker Compose. A local MongoDB container
 Create a `.env` file in the root directory:
 
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
+HUGGING_FACE_API_KEY=your_hugging_face_api_key_here
 ```
 
-**To get your Gemini API Key:**
+**To get your Hugging Face API Token:**
 
-1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Click "Get API Key"
-3. Create or select a project
-4. Copy the API key and add it to your `.env` file
+1. Visit https://huggingface.co/settings/tokens
+2. Click "Create new token"
+3. Give it a name and select the desired scopes (e.g. `read`, `write`, or `Fine-grained`)
+4. Create the token, copy it, and add it to your `.env` file
 
 ### 2. Start All Services
 

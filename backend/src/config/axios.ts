@@ -1,11 +1,20 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
+// const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
+// export const geminiAxios = axios.create({
+//   baseURL: API_BASE_URL,
+//   timeout: 60000,
+//   headers: {
+//     "x-goog-api-key": process.env.GEMINI_API_KEY || "",
+//   },
+// });
 
-export const geminiAxios = axios.create({
+const API_BASE_URL = "https://router.huggingface.co/v1";
+
+export const huggingFaceAxios = axios.create({
   baseURL: API_BASE_URL,
   timeout: 60000,
   headers: {
-    "x-goog-api-key": process.env.GEMINI_API_KEY || "",
+    Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY || ""}`,
   },
 });

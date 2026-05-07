@@ -1,10 +1,10 @@
-import { geminiAxios } from "../config/axios.js";
+import { huggingFaceAxios } from "../config/axios.js";
 
 export const initializeAi = () => {
   console.log("AI service initialized");
 
-  if (!process.env.GEMINI_API_KEY) {
-    console.error("GEMINI_API_KEY is not set");
+  if (!process.env.HUGGINGFACE_API_KEY) {
+    console.error("HUGGINGFACE_API_KEY is not set");
   }
 };
 
@@ -70,26 +70,48 @@ export const generateResponse = async (
   const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
 
   try {
-    const systemInstruction = {
-      parts: [
+    // const systemInstruction = {
+    //   parts: [
+    //     {
+    //       text: "Act as a plain-text generator. Provide your response as a single, continuous string of text without any Markdown formatting. Do not use bold (), italics (*), headers (#), bullet points, or numbered lists. Do not include a title or introduction. Provide only the direct answer in a conversational tone suitable for a standard paragraph tag.**",
+    //     },
+    //   ],
+    // };
+    // const response = await geminiAxios.post(
+    //   "/models/gemini-3.1-flash-lite-preview:generateContent",
+    //   {
+    //     systemInstruction,
+    //     contents: [{ parts: [{ text: question }] }],
+    //     generationConfig: {
+    //       thinkingConfig: {
+    //         thinkingLevel: "low",
+    //       },
+    //     },
+    //   },
+    //   { signal: controller.signal },
+    // );
+    const systemInstruction =
+      "Act as an expert AI Tutor for the BrainBytes platform. " +
+      "Since you do not have access to conversation history, treat every prompt as a new lesson. " +
+      "PEDAGOGY: 1. Always detect the intent (definition, explanation, or example) and provide a comprehensive response covering all three if appropriate. " +
+      "2. Use a 'virtual' Socratic method: instead of just giving an answer, explain the 'why' and end the paragraph with a thought-provoking hint or a 'check for understanding' question. " +
+      "3. Proactively use an encouraging and empathetic tone to prevent potential student frustration. " +
+      "FORMATTING: You are a plain-text generator for a <p> tag. " +
+      "Provide the entire response as one continuous, conversational string of text. " +
+      "Strictly PROHIBIT all Markdown, bolding (**), italics (*), headers (#), bullet points, numbered lists, or newlines (\\n). " +
+      "Use transition words like 'Furthermore,' 'For instance,' and 'To put it simply' to keep the text organized without using visual breaks.";
+
+    const response = await huggingFaceAxios.post("/chat/completions", {
+      messages: [
+        { role: "system", content: systemInstruction },
         {
-          text: "Act as a plain-text generator. Provide your response as a single, continuous string of text without any Markdown formatting. Do not use bold (), italics (*), headers (#), bullet points, or numbered lists. Do not include a title or introduction. Provide only the direct answer in a conversational tone suitable for a standard paragraph tag.**",
+          role: "user",
+          content: question,
         },
       ],
-    };
-    const response = await geminiAxios.post(
-      "/models/gemini-3.1-flash-lite-preview:generateContent",
-      {
-        systemInstruction,
-        contents: [{ parts: [{ text: question }] }],
-        generationConfig: {
-          thinkingConfig: {
-            thinkingLevel: "low",
-          },
-        },
-      },
-      { signal: controller.signal },
-    );
+      model: "meta-llama/Llama-3.1-8B-Instruct:cheapest",
+      stream: false,
+    });
 
     if (response.status !== 200) {
       return {
@@ -98,10 +120,17 @@ export const generateResponse = async (
       };
     }
 
+    // Hugging face response format
     return {
       category,
-      response: response.data.candidates[0].content.parts[0].text,
+      response: response.data.choices[0].message.content,
     };
+
+    // Gemini Response Format
+    // return {
+    //   category,
+    //   response: response.data.candidates[0].content.parts[0].text,
+    // };
   } catch (error) {
     console.error("Error generating AI response:", error);
     throw error;
