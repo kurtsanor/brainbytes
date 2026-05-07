@@ -48,8 +48,8 @@ const ChatPage = () => {
 
   const chatBoxStyle =
     data?.messages.length > 0
-      ? "bg-white flex flex-col w-full border border-neutral-200 rounded-lg focus:outline-none p-3"
-      : "flex flex-col w-full border border-neutral-200 rounded-lg focus:outline-none p-3";
+      ? "bg-white flex flex-col w-full border border-neutral-200 focus:outline-none p-3"
+      : "flex flex-col w-full border border-neutral-200 focus:outline-none p-3";
 
   const heroTextStyle = data?.messages.length < 1 ? "items-center" : "";
 
@@ -86,8 +86,7 @@ const ChatPage = () => {
       {data.messages?.length === 0 && <ChatHeader />}
       {messagesList}
       {isTyping && (
-        <div className="flex items-center justify-start mb-8 space-x-3">
-          {/* Flat Sparkle Logo SVG */}
+        <div className="flex items-center justify-start mb-8 space-x-3 animate-pulse">
           <svg
             width="22"
             height="22"
@@ -95,24 +94,20 @@ const ChatPage = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            {/* Main Large Sparkle*/}
             <path
               d="M12 3L14.5 9.5L21 12L14.5 14.5L12 21L9.5 14.5L3 12L9.5 9.5L12 3Z"
               fill="#2c94de"
             />
-            {/* Small Top Sparkle*/}
             <path
               d="M18 4L18.7 5.3L20 6L18.7 6.7L18 8L17.3 6.7L16 6L17.3 5.3L18 4Z"
               fill="#2c94de"
             />
-            {/* Small Bottom Sparkle*/}
             <path
               d="M18 16L18.7 17.3L20 18L18.7 18.7L18 20L17.3 18.7L16 18L17.3 17.3L18 16Z"
               fill="#2c94de"
             />
           </svg>
-
-          <p>BrainBytes is thinking...</p>
+          <p className="text-gray-500 italic">BrainBytes is thinking...</p>
         </div>
       )}
       <div ref={scrollRef} className="text-transparent border" />
@@ -149,7 +144,7 @@ const MessageBubble = ({ message, isUser }: MessageBubbleProps) => {
 
   return (
     <div className={`flex ${alignment} mb-8`}>
-      <p className={`rounded-lg ${bgColor}`}>{message.text}</p>
+      <p className={`${bgColor} leading-relaxed`}>{message.text}</p>
     </div>
   );
 };
@@ -175,7 +170,7 @@ const ChatInput = ({ chatBoxStyle, handleSend, isTyping }: ChatInputProps) => {
       <div className="flex justify-end">
         <button
           disabled={isTyping}
-          className="p-1.5 bg-brand-blue text-white rounded-lg hover:bg-brand-blue-hover transition-colors disabled:bg-gray-300 cursor-pointer"
+          className="p-1.5 bg-brand-blue text-white hover:bg-brand-blue-hover transition-colors disabled:bg-gray-300 cursor-pointer"
           aria-label="Send message"
           onClick={executeSend}
         >
