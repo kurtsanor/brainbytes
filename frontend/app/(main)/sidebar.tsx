@@ -10,7 +10,7 @@ const Sidebar = () => {
   ));
 
   return (
-    <aside className="flex flex-col w-66 border-r border-neutral-100 overflow-auto">
+    <aside className="flex flex-col w-66 border-r border-neutral-200 overflow-auto">
       <header className="flex flex-col p-1.5">
         <div className="flex items-center h-10 pl-2">
           <img
@@ -86,7 +86,7 @@ const Sidebar = () => {
         {history}
       </nav>
       {/* Sidebar footer */}
-      <footer className="border-t border-neutral-100 p-1.5">
+      <footer className="border-t border-neutral-200 p-1.5">
         <div className="flex p-1 hover:bg-neutral-100 cursor-pointer transition-colors">
           <div className="flex items-center">
             <img

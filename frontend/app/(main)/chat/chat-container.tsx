@@ -1,7 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+"use client";
+
+import { sendMessage } from "@/lib/api/messages";
+import { Message } from "@/types/message.types";
 import { useEffect, useRef, useState } from "react";
-import { getMessages, sendMessage } from "../api/message.api";
-import type { Message } from "../types/message.type";
 
 interface ChatInputProps {
   chatBoxStyle: string;
@@ -14,37 +15,15 @@ interface MessageBubbleProps {
   isUser: boolean;
 }
 
-const ChatPage = () => {
+const ChatContainer = (messages: { messages: Message[] }) => {
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const { data, isLoading, isError } = useQuery<{ messages: Message[] }>({
-    queryKey: ["messages"],
-    queryFn: getMessages,
-  });
-
-  const queryClient = useQueryClient();
+  const [data, setData] = useState<{ messages: Message[] }>(messages);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [data]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const sendMutation = useMutation({
-    mutationFn: sendMessage,
-    onSuccess: (newMessage) => {
-      queryClient.invalidateQueries({ queryKey: ["messages"] });
-      setIsTyping(false);
-    },
-    onError: (error) => {
-      console.error("Error sending message:", error);
-    },
-  });
-
-  // Handle Loading
-  if (isLoading) return <div>Loading messages...</div>;
-
-  // Handle Error
-  if (isError || !data) return <div>Error loading messages.</div>;
 
   const chatBoxStyle =
     data?.messages.length > 0
@@ -53,24 +32,25 @@ const ChatPage = () => {
 
   const heroTextStyle = data?.messages.length < 1 ? "items-center" : "";
 
-  const handleSend = (message: string) => {
+  const handleSend = async (message: string) => {
     if (!message.trim()) {
       return;
     }
-    queryClient.setQueryData<{ messages: Message[] }>(
-      ["messages"],
-      (oldData) => {
-        const newMessage: any = {
-          _id: Date.now().toString(),
-          text: message,
-        };
-        return {
-          messages: [...(oldData?.messages || []), newMessage],
-        };
-      },
-    );
+    setData((prevData) => {
+      const newMessage: any = {
+        _id: Date.now().toString(),
+        text: message,
+      };
+      return {
+        messages: [...prevData.messages, newMessage],
+      };
+    });
     setIsTyping(true);
-    sendMutation.mutate(message);
+    const response = await sendMessage(message);
+    setData((prevData) => ({
+      messages: [...prevData.messages, response.aiMessage],
+    }));
+    setIsTyping(false);
   };
 
   const messagesList = data?.messages?.map((msg, index) => {
@@ -196,4 +176,4 @@ const Disclaimer = () => {
   );
 };
 
-export default ChatPage;
+export default ChatContainer;

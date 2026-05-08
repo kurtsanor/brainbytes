@@ -3,7 +3,10 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "8080:5173"
+      - "8080:3000"
+    environment:
+      - API_BASE_URL_SERVER=${API_BASE_URL_SERVER}
+      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules

@@ -13,7 +13,7 @@ BrainBytes is an AI-powered tutoring platform designed to provide accessible aca
 
 ## Technology Stack
 
-- Frontend: React.js
+- Frontend: Next.js
 - Backend: Node.js
 - Database: MongoDB Atlas
 - Containerization: Docker
