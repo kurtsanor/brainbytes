@@ -60,7 +60,7 @@ const ChatContainer = (messages: { messages: Message[] }) => {
 
   return (
     <div
-      className={`flex min-h-screen flex-col ${heroTextStyle} justify-center max-w-200 p-5`}
+      className={`flex min-h-screen flex-col ${heroTextStyle} max-w-200 p-5`}
     >
       {/* Show welcome message if no messages */}
       {data.messages?.length === 0 && <ChatHeader />}
