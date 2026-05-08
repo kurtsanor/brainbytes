@@ -10,7 +10,7 @@ const Sidebar = () => {
   ));
 
   return (
-    <aside className="flex flex-col w-66 border-r border-neutral-200 overflow-auto">
+    <aside className="flex-col w-66 border-r border-neutral-200 overflow-auto hidden md:block">
       <header className="flex flex-col p-1.5">
         <div className="flex items-center h-10 pl-2">
           <img

@@ -59,7 +59,7 @@ docker-compose up -d --build
 ### 3. Access the Application
 
 - **Frontend**: http://localhost:8080
-- **Backend API**: http://localhost:3000
+- **Backend API**: http://localhost:3001
 - **MongoDB**: localhost:27017
 
 ### 4. View Logs

@@ -1,8 +1,8 @@
-const DEFAULT_SERVER_API_BASE_URL = "http://backend:3000";
-const DEFAULT_CLIENT_API_BASE_URL = "http://localhost:3000";
+const DEFAULT_SERVER_API_BASE_URL = "http://backend:3001";
+const DEFAULT_CLIENT_API_BASE_URL = "http://localhost:3001";
 
 const getApiBaseUrl = (): string => {
-  // Server-side code runs inside the frontend container in Docker.
+  // Server-side fetch
   if (typeof window === "undefined") {
     return (
       process.env.API_BASE_URL_SERVER ||
