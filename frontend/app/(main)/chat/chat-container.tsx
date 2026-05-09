@@ -30,7 +30,10 @@ const ChatContainer = (messages: { messages: Message[] }) => {
       ? "bg-white flex flex-col w-full border border-neutral-200 focus:outline-none p-3"
       : "flex flex-col w-full border border-neutral-200 focus:outline-none p-3";
 
-  const heroTextStyle = data?.messages.length < 1 ? "items-center" : "";
+  const heroTextStyle =
+    data?.messages.length < 1 ? "justify-center items-center" : "";
+
+  const chatContainerStyle = data?.messages.length < 1 ? "" : "flex-1";
 
   const handleSend = async (message: string) => {
     if (!message.trim()) {
@@ -60,37 +63,39 @@ const ChatContainer = (messages: { messages: Message[] }) => {
 
   return (
     <div
-      className={`flex min-h-screen flex-col ${heroTextStyle} max-w-200 p-5`}
+      className={`flex min-h-screen flex-col ${heroTextStyle} max-w-200 w-200 p-5 pb-0`}
     >
-      {/* Show welcome message if no messages */}
-      {data.messages?.length === 0 && <ChatHeader />}
-      {messagesList}
-      {isTyping && (
-        <div className="flex items-center justify-start mb-8 space-x-3 animate-pulse">
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M12 3L14.5 9.5L21 12L14.5 14.5L12 21L9.5 14.5L3 12L9.5 9.5L12 3Z"
-              fill="#2c94de"
-            />
-            <path
-              d="M18 4L18.7 5.3L20 6L18.7 6.7L18 8L17.3 6.7L16 6L17.3 5.3L18 4Z"
-              fill="#2c94de"
-            />
-            <path
-              d="M18 16L18.7 17.3L20 18L18.7 18.7L18 20L17.3 18.7L16 18L17.3 17.3L18 16Z"
-              fill="#2c94de"
-            />
-          </svg>
-          <p className="text-gray-500 italic">BrainBytes is thinking...</p>
-        </div>
-      )}
-      <div ref={scrollRef} className="text-transparent border" />
+      <div className={`flex flex-col ${heroTextStyle} ${chatContainerStyle}`}>
+        {/* Show welcome message if no messages */}
+        {data.messages?.length === 0 && <ChatHeader />}
+        {messagesList}
+        {isTyping && (
+          <div className="flex items-center justify-start mb-8 space-x-3 animate-pulse">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 3L14.5 9.5L21 12L14.5 14.5L12 21L9.5 14.5L3 12L9.5 9.5L12 3Z"
+                fill="#2c94de"
+              />
+              <path
+                d="M18 4L18.7 5.3L20 6L18.7 6.7L18 8L17.3 6.7L16 6L17.3 5.3L18 4Z"
+                fill="#2c94de"
+              />
+              <path
+                d="M18 16L18.7 17.3L20 18L18.7 18.7L18 20L17.3 18.7L16 18L17.3 17.3L18 16Z"
+                fill="#2c94de"
+              />
+            </svg>
+            <p className="text-gray-500 italic">BrainBytes is thinking...</p>
+          </div>
+        )}
+        <div ref={scrollRef} className="text-transparent border" />
+      </div>
       {/* Text Area layout */}
       <div className="w-full mt-5 sticky pb-3 bottom-0 z-100 bg-white">
         <ChatInput
