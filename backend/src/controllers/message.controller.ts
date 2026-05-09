@@ -1,7 +1,11 @@
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction } from "express";
 import * as messageService from "../services/message.service.js";
 
-export const createMessage = async (req: Request, res: Response) => {
+export const createMessage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { text } = req.body;
 
@@ -11,16 +15,20 @@ export const createMessage = async (req: Request, res: Response) => {
 
     res.status(201).json({ userMessage, aiMessage, category });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-export const findAllMessages = async (req: Request, res: Response) => {
+export const findAllMessages = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await messageService.findAllMessages();
 
     res.status(200).json({ messages: result });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
