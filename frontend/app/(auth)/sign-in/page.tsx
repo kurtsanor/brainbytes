@@ -1,6 +1,45 @@
+"use client";
+
+import { Button } from "@/components/Button";
+import { signIn } from "@/lib/api/auth";
+import { SignInFormValues, signInSchema } from "@/schema/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect, useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+
 const SignInPage = () => {
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInFormValues>({
+    resolver: zodResolver(signInSchema),
+    mode: "onSubmit",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async ({ ...payload }: SignInFormValues) => {
+    try {
+      const response = await signIn(payload);
+      if (response) {
+        router.replace("/chat");
+      }
+      console.log(response);
+    } catch (error) {
+      console.log("An error occured: ", error);
+    }
+  };
+
   return (
-    <div className="border border-neutral-200 w-115 flex flex-col bg-white p-5">
+    <form
+      className="border border-neutral-200 w-115 flex flex-col bg-white p-5"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       {/* Header */}
       <h1 className="text-xl font-bold mb-1 tracking-tight">Sign in</h1>
       <p className="tracking-tight">
@@ -9,16 +48,30 @@ const SignInPage = () => {
       {/* Input Fields */}
       <p className="text-sm font-medium mt-4 mb-1.5">Email</p>
       <input
+        {...register("email")}
+        disabled={isSubmitting}
         type="email"
         placeholder="you@example.com"
         className="border border-neutral-200 px-3 py-1.5 tracking-tight bg-neutral-50"
       />
+      {errors.email && (
+        <span className="text-xs text-red-500 mt-1">
+          {errors.email.message}
+        </span>
+      )}
       <p className="text-sm font-medium mt-4 mb-1.5">Password</p>
       <input
+        {...register("password")}
+        disabled={isSubmitting}
         type="password"
         placeholder="password"
         className="border border-neutral-200 px-3 py-1.5 tracking-tight bg-neutral-50"
       />
+      {errors.password && (
+        <span className="text-xs text-red-500 mt-1">
+          {errors.password.message}
+        </span>
+      )}
       <div className="flex items-center mt-3 ml-0.5">
         <input type="checkbox" id="remember" className="mr-2" />
         <label
@@ -28,9 +81,13 @@ const SignInPage = () => {
           Remember me
         </label>
       </div>
-      <button className="bg-black hover:bg-neutral-900 text-white p-1.5 mt-3 tracking-tight transition-colors">
+      <Button
+        isLoading={isSubmitting}
+        loadingText="Logging in..."
+        className="bg-black hover:bg-neutral-900 text-white p-1.5 mt-3 tracking-tight transition-colors"
+      >
         Login
-      </button>
+      </Button>
       <button className="border border-neutral-200 hover:bg-neutral-100 text-black p-1.5 mt-4 tracking-tight flex items-center justify-center gap-2 transition-colors">
         <svg
           xmlns="http://w3.org"
@@ -74,7 +131,7 @@ const SignInPage = () => {
       <p className="text-xs text-center text-muted-foreground">
         By signing in, you agree to the Terms of Service and Privacy Policy.
       </p>
-    </div>
+    </form>
   );
 };
 

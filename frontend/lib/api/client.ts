@@ -34,9 +34,9 @@ export async function apiFetch<T>(
     },
   });
 
-  if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
-  }
+  // if (!res.ok) {
+  //   throw new Error(`API error: ${res.status} ${res.statusText}`);
+  // }
 
   return res.json() as Promise<T>;
 }
