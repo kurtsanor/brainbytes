@@ -29,6 +29,6 @@ export const signIn = async (
 
     res.status(200).json({ response });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };

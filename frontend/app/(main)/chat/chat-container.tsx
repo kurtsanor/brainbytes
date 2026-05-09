@@ -71,26 +71,7 @@ const ChatContainer = (messages: { messages: Message[] }) => {
         {messagesList}
         {isTyping && (
           <div className="flex items-center justify-start mb-8 space-x-3 animate-pulse">
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 3L14.5 9.5L21 12L14.5 14.5L12 21L9.5 14.5L3 12L9.5 9.5L12 3Z"
-                fill="#2c94de"
-              />
-              <path
-                d="M18 4L18.7 5.3L20 6L18.7 6.7L18 8L17.3 6.7L16 6L17.3 5.3L18 4Z"
-                fill="#2c94de"
-              />
-              <path
-                d="M18 16L18.7 17.3L20 18L18.7 18.7L18 20L17.3 18.7L16 18L17.3 17.3L18 16Z"
-                fill="#2c94de"
-              />
-            </svg>
+            <img src="/bblogo1.png" alt="BrainBytes Logo" className="w-8 h-8" />
             <p className="text-gray-500 italic">BrainBytes is thinking...</p>
           </div>
         )}
@@ -112,7 +93,11 @@ const ChatContainer = (messages: { messages: Message[] }) => {
 const ChatHeader = () => {
   return (
     <>
-      <img src="/brains.png" alt="BrainBytes Logo" className="w-20 h-20 mb-5" />
+      <img
+        src="/bblogo1.png"
+        alt="BrainBytes Logo"
+        className="w-30 h-30 mb-5"
+      />
       <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-2 bg-linear-to-r from-blue-950 to-brand-blue bg-clip-text text-transparent">
         Hello, Jackson
       </h1>

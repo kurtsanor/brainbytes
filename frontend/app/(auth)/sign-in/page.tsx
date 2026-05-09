@@ -4,7 +4,7 @@ import { Button } from "@/components/Button";
 import { signIn } from "@/lib/api/auth";
 import { SignInFormValues, signInSchema } from "@/schema/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 const SignInPage = () => {
@@ -26,8 +26,9 @@ const SignInPage = () => {
   const onSubmit = async ({ ...payload }: SignInFormValues) => {
     try {
       const response = await signIn(payload);
-      if (response) {
+      if (!response.error) {
         router.replace("/chat");
+        return;
       }
       console.log(response);
     } catch (error) {

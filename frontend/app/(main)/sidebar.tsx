@@ -12,13 +12,13 @@ const Sidebar = () => {
   return (
     <aside className="flex-col w-66 border-r border-neutral-200 overflow-auto hidden md:flex">
       <header className="flex flex-col p-1.5">
-        <div className="flex items-center h-10 pl-2">
+        <div className="flex items-center h-10 pl-1">
           <img
-            src="/brains.png"
+            src="/bblogo1.png"
             alt="BrainBytes Logo"
-            className="w-6 h-6 mr-1 object-contain"
+            className="w-7 h-7 mr-1"
           />
-          <h1 className="text-xl font-semibold tracking-tight">BrainBytes</h1>
+          <h1 className="text-lg font-semibold tracking-tight">BrainBytes</h1>
         </div>
       </header>
       <section className="p-2 mb-2 flex flex-col gap-1">
@@ -39,7 +39,7 @@ const Sidebar = () => {
               d="M12 4.5v15m7.5-7.5h-15"
             />
           </svg>
-          <span className="font-medium">New chat</span>
+          <span>New chat</span>
         </button>
         {/* Dashboard Button */}
         <button className="flex items-center gap-2 w-full p-1.5 transition-colors hover:bg-neutral-100 cursor-pointer">
