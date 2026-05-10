@@ -11,7 +11,7 @@ export const signUp = async (signUpRequest: SignUpRequest) => {
     }
 
     const hashedPassword = await bcrypt.hash(signUpRequest.password, 10);
-    return await User.create({
+    await User.create({
       firstName: signUpRequest.firstName,
       lastName: signUpRequest.lastName,
       email: signUpRequest.email,

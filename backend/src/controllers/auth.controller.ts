@@ -9,11 +9,11 @@ export const signUp = async (
   try {
     const request = req.body;
 
-    const response = await authService.signUp(request);
+    await authService.signUp(request);
 
-    res.status(201).json({ response });
+    res.status(201).json({ response: "User created successfully" });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 

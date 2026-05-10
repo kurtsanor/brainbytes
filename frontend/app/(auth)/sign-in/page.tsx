@@ -25,8 +25,13 @@ const SignInPage = () => {
 
   const onSubmit = async ({ ...payload }: SignInFormValues) => {
     try {
-      const response = await signIn(payload);
-      if (!response.error) {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
         router.replace("/chat");
         return;
       }
@@ -89,7 +94,10 @@ const SignInPage = () => {
       >
         Login
       </Button>
-      <button className="border border-neutral-200 hover:bg-neutral-100 text-black p-1.5 mt-4 tracking-tight flex items-center justify-center gap-2 transition-colors">
+      <button
+        type="button"
+        className="border border-neutral-200 hover:bg-neutral-100 text-black p-1.5 mt-4 tracking-tight flex items-center justify-center gap-2 transition-colors"
+      >
         <svg
           xmlns="http://w3.org"
           viewBox="0 0 48 48"
@@ -115,7 +123,10 @@ const SignInPage = () => {
 
         <span>Sign in with Google</span>
       </button>
-      <button className="border border-neutral-200 hover:bg-neutral-100 text-black p-1.5 mt-2 tracking-tight flex items-center justify-center gap-2 transition-colors">
+      <button
+        type="button"
+        className="border border-neutral-200 hover:bg-neutral-100 text-black p-1.5 mt-2 tracking-tight flex items-center justify-center gap-2 transition-colors"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
