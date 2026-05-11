@@ -1,6 +1,12 @@
 "use client";
 
-const AccountMenu = () => {
+import { User } from "@/types/user.types";
+
+interface AccountMenuProps {
+  user: User;
+}
+
+const AccountMenu = ({ user }: AccountMenuProps) => {
   const handleLogout = async () => {
     try {
       const response = await fetch("/api/logout", {
@@ -27,8 +33,10 @@ const AccountMenu = () => {
           className="w-10 h-10 mr-2 rounded-full object-cover"
         />
         <div className="flex flex-col">
-          <span className="font-semibold text-sm">Emerson Sterling</span>
-          <span className="text-xs text-neutral-500">sterling@gmail.com</span>
+          <span className="font-semibold text-sm">
+            {user?.firstName} {user?.lastName}
+          </span>
+          <span className="text-xs text-neutral-500">{user?.email}</span>
         </div>
       </div>
 

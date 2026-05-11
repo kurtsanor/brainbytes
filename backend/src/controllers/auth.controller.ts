@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import * as authService from "../services/auth.service.js";
+import type { JwtClaims } from "../types/auth.types.js";
 
 export const signUp = async (
   req: Request,
@@ -39,8 +40,8 @@ export const getCurrentUser = async (
   next: NextFunction,
 ) => {
   try {
-    const id = req.user as string;
-    const user = await authService.getUserById(id);
+    const currentUser = req.user as JwtClaims;
+    const user = await authService.getUserById(currentUser.userId);
     res.status(200).json({ user });
   } catch (error) {
     next(error);

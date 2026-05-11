@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUp } from "@/lib/api/auth";
+import { signUp } from "@/lib/api/auth.client";
 import { useForm } from "react-hook-form";
 import { SignUpFormValues, signUpSchema } from "@/schema/auth";
 import { Button } from "@/components/Button";

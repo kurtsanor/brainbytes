@@ -1,6 +1,9 @@
+import { getMe } from "@/lib/api/auth.server";
 import AccountMenu from "./account-menu";
 
-const Sidebar = () => {
+const Sidebar = async () => {
+  const userDetails = await getMe();
+
   const history = Array.from({ length: 20 }, (_, i) => (
     <a
       key={i}
@@ -91,7 +94,7 @@ const Sidebar = () => {
       </nav>
       {/* Sidebar footer */}
       <footer className="border-t border-neutral-200 p-1.5">
-        <AccountMenu />
+        <AccountMenu user={userDetails.user} />
       </footer>
     </aside>
   );
