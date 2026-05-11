@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/Button";
-import { signIn } from "@/lib/api/auth";
 import { SignInFormValues, signInSchema } from "@/schema/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -32,6 +31,8 @@ const SignInPage = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("session-token", data.token);
         router.replace("/chat");
         return;
       }

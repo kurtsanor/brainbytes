@@ -22,21 +22,30 @@ const buildApiUrl = (endpoint: string): string => {
   return `${baseUrl}${path}`;
 };
 
-export async function apiFetch<T>(
+export async function apiClientFetch<T>(
   endpoint: string,
   options?: RequestInit & { next?: NextFetchRequestConfig },
 ): Promise<T> {
+  let headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...options?.headers,
+  };
+  const token = localStorage.getItem("session-token");
+  if (token) {
+    headers = {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+    };
+  }
+
   const res = await fetch(buildApiUrl(endpoint), {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
+    headers,
   });
 
-  // if (!res.ok) {
-  //   throw new Error(`API error: ${res.status} ${res.statusText}`);
-  // }
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status} ${res.statusText}`);
+  }
 
   return res.json() as Promise<T>;
 }

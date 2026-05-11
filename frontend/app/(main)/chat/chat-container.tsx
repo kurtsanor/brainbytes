@@ -1,6 +1,6 @@
 "use client";
 
-import { sendMessage } from "@/lib/api/messages";
+import { sendMessage } from "@/lib/api/messages.client";
 import { Message } from "@/types/message.types";
 import { useEffect, useRef, useState } from "react";
 
@@ -26,14 +26,14 @@ const ChatContainer = (messages: { messages: Message[] }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const chatBoxStyle =
-    data?.messages.length > 0
+    data?.messages?.length > 0
       ? "bg-white flex flex-col w-full border border-neutral-200 focus:outline-none p-3"
       : "flex flex-col w-full border border-neutral-200 focus:outline-none p-3";
 
   const heroTextStyle =
-    data?.messages.length < 1 ? "justify-center items-center" : "";
+    data?.messages?.length < 1 ? "justify-center items-center" : "";
 
-  const chatContainerStyle = data?.messages.length < 1 ? "" : "flex-1";
+  const chatContainerStyle = data?.messages?.length < 1 ? "" : "flex-1";
 
   const handleSend = async (message: string) => {
     if (!message.trim()) {
@@ -49,11 +49,18 @@ const ChatContainer = (messages: { messages: Message[] }) => {
       };
     });
     setIsTyping(true);
-    const response = await sendMessage(message);
-    setData((prevData) => ({
-      messages: [...prevData.messages, response.aiMessage],
-    }));
-    setIsTyping(false);
+    try {
+      const response = await sendMessage(message);
+      console.log(response);
+
+      setData((prevData) => ({
+        messages: [...prevData.messages, response.aiMessage],
+      }));
+    } catch (error) {
+      console.error("Error sending message:", error);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   const messagesList = data?.messages?.map((msg, index) => {
@@ -70,9 +77,9 @@ const ChatContainer = (messages: { messages: Message[] }) => {
         {data.messages?.length === 0 && <ChatHeader />}
         {messagesList}
         {isTyping && (
-          <div className="flex items-center justify-start mb-8 space-x-3 animate-pulse">
-            <img src="/bblogo1.png" alt="BrainBytes Logo" className="w-8 h-8" />
-            <p className="text-gray-500 italic">BrainBytes is thinking...</p>
+          <div className="flex items-center justify-start mb-8 space-x-1 animate-pulse">
+            <img src="/bblogo1.png" alt="BrainBytes Logo" className="w-6 h-5" />
+            <p className="text-gray-500">BrainBytes is thinking...</p>
           </div>
         )}
         <div ref={scrollRef} className="text-transparent border" />
@@ -131,8 +138,7 @@ const ChatInput = ({ chatBoxStyle, handleSend, isTyping }: ChatInputProps) => {
     <div className={chatBoxStyle}>
       <textarea
         disabled={isTyping}
-        rows={2}
-        className="w-full resize-none focus:outline-none mb-5"
+        className="w-full resize-none focus:outline-none mb-5 field-sizing-content min-h-12 max-h-30"
         placeholder="How can I help you today?"
         onChange={(e) => setMessageInput(e.target.value)}
         value={messageInput}

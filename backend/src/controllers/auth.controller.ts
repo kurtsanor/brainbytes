@@ -32,3 +32,17 @@ export const signIn = async (
     next(error);
   }
 };
+
+export const getCurrentUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const id = req.user as string;
+    const user = await authService.getUserById(id);
+    res.status(200).json({ user });
+  } catch (error) {
+    next(error);
+  }
+};

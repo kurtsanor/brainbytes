@@ -1,4 +1,4 @@
-import { getAllMessages } from "@/lib/api/messages";
+import { getAllMessages } from "@/lib/api/messages.server";
 import ChatContainer from "./chat-container";
 
 const ChatPage = async () => {

@@ -39,3 +39,12 @@ export const signIn = async (email: string, password: string) => {
     throw error;
   }
 };
+
+export const getUserById = async (userId: string) => {
+  try {
+    const user = await User.findById(userId).select("-password");
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
