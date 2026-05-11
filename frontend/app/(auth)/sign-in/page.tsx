@@ -5,6 +5,7 @@ import { SignInFormValues, signInSchema } from "@/schema/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const SignInPage = () => {
   const router = useRouter();
@@ -30,13 +31,13 @@ const SignInPage = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("session-token", data.token);
-        router.replace("/chat");
+      if (!response.ok) {
+        toast.error("Invalid email or password");
         return;
       }
-      console.log(response);
+      const data = await response.json();
+      localStorage.setItem("session-token", data.token);
+      router.replace("/chat");
     } catch (error) {
       console.log("An error occured: ", error);
     }
