@@ -71,8 +71,8 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
       }
 
       setData((prevData) => [...prevData, response.aiMessage]);
-      router.refresh(); // Refresh the page to fetch the latest messages and update the UI
       router.replace(`/chat/${response.aiMessage.chatId}`); // Update URL to reflect the current chat session
+      router.refresh(); // Refresh after navigation so the sidebar/server tree re-renders with the new chat
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {

@@ -11,7 +11,9 @@ export const getMessagesByChatId = async (chatId: string): Promise<Message[]> =>
     });
 
 export const getUserConversations = () =>
-  apiServerFetch<{ data: Chat[] }>(`/api/chats/`)
+  apiServerFetch<{ data: Chat[] }>(`/api/chats/`, {
+    cache: "no-store",
+  })
     .then((res) => res.data)
     .catch((error) => {
       console.error("Error fetching conversations:", error);
