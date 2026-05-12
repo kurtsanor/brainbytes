@@ -2,6 +2,8 @@
 
 import { sendMessage } from "@/lib/api/messages.client";
 import { Message } from "@/types/message.types";
+import { User } from "@/types/user.types";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 interface ChatInputProps {
@@ -15,9 +17,22 @@ interface MessageBubbleProps {
   isUser: boolean;
 }
 
-const ChatContainer = (messages: { messages: Message[] }) => {
+interface ChatHeaderProps {
+  userDetails?: User;
+}
+
+type ChatContainerProps = {
+  messages: Message[];
+  id?: string;
+  userDetails?: User;
+};
+
+const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
+  const router = useRouter();
+
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [data, setData] = useState<{ messages: Message[] }>(messages);
+  const [data, setData] = useState<Message[]>(messages);
+  const chatIdRef = useRef<string | undefined>(id);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -26,14 +41,13 @@ const ChatContainer = (messages: { messages: Message[] }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const chatBoxStyle =
-    data?.messages?.length > 0
+    data?.length > 0
       ? "bg-white flex flex-col w-full border border-neutral-200 focus:outline-none p-3"
       : "flex flex-col w-full border border-neutral-200 focus:outline-none p-3";
 
-  const heroTextStyle =
-    data?.messages?.length < 1 ? "justify-center items-center" : "";
+  const heroTextStyle = data?.length < 1 ? "justify-center items-center" : "";
 
-  const chatContainerStyle = data?.messages?.length < 1 ? "" : "flex-1";
+  const chatContainerStyle = data?.length < 1 ? "" : "flex-1";
 
   const handleSend = async (message: string) => {
     if (!message.trim()) {
@@ -44,18 +58,21 @@ const ChatContainer = (messages: { messages: Message[] }) => {
         _id: Date.now().toString(),
         text: message,
       };
-      return {
-        messages: [...prevData.messages, newMessage],
-      };
+      return [...prevData, newMessage];
     });
     setIsTyping(true);
     try {
-      const response = await sendMessage(message);
+      console.log("chat id is ", chatIdRef.current);
+      const response = await sendMessage(message, chatIdRef.current || "");
       console.log(response);
 
-      setData((prevData) => ({
-        messages: [...prevData.messages, response.aiMessage],
-      }));
+      if (!chatIdRef.current) {
+        chatIdRef.current = response.aiMessage.chatId; // Update the chat ID if it was newly created
+      }
+
+      setData((prevData) => [...prevData, response.aiMessage]);
+      router.refresh(); // Refresh the page to fetch the latest messages and update the UI
+      router.replace(`/chat/${response.aiMessage.chatId}`); // Update URL to reflect the current chat session
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
@@ -63,7 +80,7 @@ const ChatContainer = (messages: { messages: Message[] }) => {
     }
   };
 
-  const messagesList = data?.messages?.map((msg, index) => {
+  const messagesList = data?.map((msg, index) => {
     const isUser = index % 2 === 0;
     return <MessageBubble key={index} message={msg} isUser={isUser} />;
   });
@@ -74,7 +91,7 @@ const ChatContainer = (messages: { messages: Message[] }) => {
     >
       <div className={`flex flex-col ${heroTextStyle} ${chatContainerStyle}`}>
         {/* Show welcome message if no messages */}
-        {data.messages?.length === 0 && <ChatHeader />}
+        {data.length === 0 && <ChatHeader userDetails={userDetails} />}
         {messagesList}
         {isTyping && (
           <div className="flex items-center justify-start mb-8 space-x-1 animate-pulse">
@@ -97,7 +114,7 @@ const ChatContainer = (messages: { messages: Message[] }) => {
   );
 };
 
-const ChatHeader = () => {
+const ChatHeader = ({ userDetails }: ChatHeaderProps) => {
   return (
     <>
       <img
@@ -106,7 +123,7 @@ const ChatHeader = () => {
         className="w-30 h-30 mb-5"
       />
       <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-2 bg-linear-to-r from-blue-950 to-brand-blue bg-clip-text text-transparent">
-        Hello, Jackson
+        Hello, {userDetails?.firstName || "there"}
       </h1>
       <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
         How can I assist you today?

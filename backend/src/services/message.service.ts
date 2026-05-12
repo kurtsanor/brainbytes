@@ -1,17 +1,56 @@
 import Message from "../models/message.model.js";
+import type { MessageDto } from "../types/message.types.js";
 import * as aiService from "./ai.service.js";
+import * as chatService from "./chat.service.js";
 
 export const createMessage = async (
   text: string,
-): Promise<{ userMessage: any; aiMessage: any; category: string }> => {
+  chatId: string | null,
+  userId: string,
+): Promise<MessageDto> => {
   try {
-    const userMessage = await Message.create({ text, isUser: true });
+    // If no chatId is provided, just create a new chat session
+    if (!chatId) {
+      console.log("No chat id, creating topic title");
+
+      const title = await aiService.generateTopicTitle(text);
+      const chat = await chatService.createChat(
+        {
+          title,
+          subject: "General",
+        },
+        userId,
+      );
+      chatId = chat._id.toString();
+    }
+
+    // If there is a chat id, check if it exists and belongs to the user
+    else {
+      console.log(
+        "Chat id found, checking if it exists and belongs to the user",
+      );
+      const chat = await chatService.findChatById(chatId);
+      if (!chat) {
+        throw new Error("Chat not found");
+      }
+      if (chat.userId.toString() !== userId) {
+        throw new Error("Unauthorized");
+      }
+    }
+
+    // Save user message
+    const userMessage = await Message.create({
+      text,
+      isUser: true,
+      chatId,
+    });
 
     // Generate AI response with a 60-second overall timeout
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Request timeout")), 60000),
     );
 
+    // Get the response from the AI service
     const aiResultPromise = aiService.generateResponse(text);
 
     // Race between the AI response and the timeout
@@ -29,9 +68,29 @@ export const createMessage = async (
     const aiMessage = await Message.create({
       text: aiResult.response,
       isUser: false,
+      chatId,
     });
 
     return { userMessage, aiMessage, category: aiResult.category };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const findMessagesByChatId = async (chatId: string, userId: string) => {
+  try {
+    // Check if chat exists
+    const chat = await chatService.findChatById(chatId);
+    if (!chat) {
+      throw new Error("Chat not found");
+    }
+
+    // Check also if it belongs to the logged in user
+    if (chat.userId.toString() !== userId) {
+      throw new Error("Unauthorized");
+    }
+
+    return await Message.find({ chatId }).sort({ createdAt: 1 });
   } catch (error) {
     throw error;
   }

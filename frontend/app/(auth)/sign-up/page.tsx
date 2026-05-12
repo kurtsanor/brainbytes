@@ -5,6 +5,7 @@ import { signUp } from "@/lib/api/auth.client";
 import { useForm } from "react-hook-form";
 import { SignUpFormValues, signUpSchema } from "@/schema/auth";
 import { Button } from "@/components/Button";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const {
@@ -28,9 +29,15 @@ const SignUpPage = () => {
     confirmPassword: _confirmPassword,
     ...payload
   }: SignUpFormValues) => {
-    const response = await signUp(payload);
-    reset();
-    console.log(response);
+    try {
+      const response = await signUp(payload);
+      reset();
+      console.log(response);
+      toast.success("Account created successfully!");
+    } catch (error) {
+      console.error("Error signing up:", error);
+      toast.error("Failed to create account. Please try again.");
+    }
   };
 
   return (

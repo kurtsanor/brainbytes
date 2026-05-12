@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import messageRoutes from "./routes/message.route.js";
 import authRoutes from "./routes/auth.routes.js";
+import chatRoutes from "./routes/chat.routes.js";
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use("/api/messages", messageRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/chats", chatRoutes);
 
 // Error handling middleware
 app.use(

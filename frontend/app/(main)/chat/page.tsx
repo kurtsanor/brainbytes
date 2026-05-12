@@ -1,10 +1,10 @@
-import { getAllMessages } from "@/lib/api/messages.server";
+import { getMe } from "@/lib/api/auth.server";
 import ChatContainer from "./chat-container";
 
-const ChatPage = async () => {
-  const messages = await getAllMessages();
+const NewChatPage = async () => {
+  const userDetails = await getMe();
 
-  return <ChatContainer messages={messages} />;
+  return <ChatContainer messages={[]} userDetails={userDetails.user} />;
 };
 
-export default ChatPage;
+export default NewChatPage;

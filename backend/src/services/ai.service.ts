@@ -8,6 +8,24 @@ export const initializeAi = () => {
   }
 };
 
+export const generateTopicTitle = async (prompt: string): Promise<string> => {
+  const systemInstruction =
+    "You are a title generator for a chatbot. Given the user's first message, respond with a short, concise conversation title (3-6 words max). The title should capture the main topic or intent. Respond with ONLY the title — no punctuation at the end, no explanation, no quotes.";
+
+  const response = await huggingFaceAxios.post("/chat/completions", {
+    messages: [
+      { role: "system", content: systemInstruction },
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    model: "meta-llama/Llama-3.1-8B-Instruct:cheapest",
+    stream: false,
+  });
+  return response.data.choices[0].message.content;
+};
+
 export const generateResponse = async (
   question: string,
 ): Promise<{ category: string; response: string }> => {

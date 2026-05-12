@@ -1,18 +1,13 @@
 import { getMe } from "@/lib/api/auth.server";
 import AccountMenu from "./account-menu";
+import { getUserConversations } from "@/lib/api/messages.server";
+import ChatList from "./chat-list";
+import Link from "next/link";
 
 const Sidebar = async () => {
   const userDetails = await getMe();
 
-  const history = Array.from({ length: 20 }, (_, i) => (
-    <a
-      key={i}
-      href="#"
-      className="w-full leading-relaxed py-1 px-2 transition-colors hover:bg-neutral-100 cursor-pointer whitespace-nowrap overflow-x-clip text-ellipsis"
-    >
-      Lorem ipsum dolor sit amet consectetur
-    </a>
-  ));
+  const chatHistory = await getUserConversations();
 
   return (
     <aside className="flex-col w-66 border-r border-neutral-200 overflow-auto hidden md:flex">
@@ -30,7 +25,10 @@ const Sidebar = async () => {
       </header>
       <section className="p-2 mb-2 flex flex-col gap-1">
         {/* New chat button */}
-        <button className="flex items-center justify-center gap-2 w-full bg-black text-white p-1.5 transition-colors hover:bg-neutral-700 cursor-pointer">
+        <Link
+          href="/chat/"
+          className="flex items-center justify-center gap-2 w-full bg-black text-white p-1.5 transition-colors hover:bg-neutral-700 cursor-pointer"
+        >
           {/* Plus Icon SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +45,7 @@ const Sidebar = async () => {
             />
           </svg>
           <span>New chat</span>
-        </button>
+        </Link>
         {/* Dashboard Button */}
         <button className="flex items-center gap-2 w-full p-1.5 transition-colors hover:bg-neutral-100 cursor-pointer">
           {/* Dashboard Icon SVG */}
@@ -90,7 +88,7 @@ const Sidebar = async () => {
       {/* Chat history */}
       <nav className="flex flex-col flex-1 p-2 overflow-y-auto">
         <p className="text-neutral-500 text-sm mb-1.5 ml-1.5">Recents</p>
-        {history}
+        <ChatList chats={chatHistory} />
       </nav>
       {/* Sidebar footer */}
       <footer className="border-t border-neutral-200 p-1.5">
