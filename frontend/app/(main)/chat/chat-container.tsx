@@ -53,6 +53,8 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
     if (!message.trim()) {
       return;
     }
+    const isFirstMessage = !chatIdRef.current;
+
     setData((prevData) => {
       const newMessage: any = {
         _id: Date.now().toString(),
@@ -71,8 +73,10 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
       }
 
       setData((prevData) => [...prevData, response.aiMessage]);
-      router.replace(`/chat/${response.aiMessage.chatId}`); // Update URL to reflect the current chat session
-      router.refresh(); // Refresh after navigation so the sidebar/server tree re-renders with the new chat
+      if (isFirstMessage) {
+        router.replace(`/chat/${response.aiMessage.chatId}`); // Update URL to reflect the current chat session
+        router.refresh(); // Refresh after navigation so the sidebar/server tree re-renders with the new chat
+      }
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
