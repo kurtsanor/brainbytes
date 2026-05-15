@@ -26,6 +26,7 @@ services:
     environment:
       - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
       - JWT_SECRET=${JWT_SECRET}
+      - PORT=${PORT}
     depends_on:
       - mongo
     restart: unless-stopped

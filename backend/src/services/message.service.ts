@@ -8,6 +8,8 @@ export const createMessage = async (
   chatId: string | null,
   userId: string,
 ): Promise<MessageDto> => {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
   try {
     // If no chatId is provided, just create a new chat session
     if (!chatId) {
@@ -46,9 +48,9 @@ export const createMessage = async (
     });
 
     // Generate AI response with a 60-second overall timeout
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Request timeout")), 60000),
-    );
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => reject(new Error("Request timeout")), 60000);
+    });
 
     // Get the response from the AI service
     const aiResultPromise = aiService.generateResponse(text);
@@ -74,6 +76,8 @@ export const createMessage = async (
     return { userMessage, aiMessage, category: aiResult.category };
   } catch (error) {
     throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
 };
 

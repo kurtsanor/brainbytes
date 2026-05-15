@@ -3,7 +3,7 @@ import app from "./app.js";
 import connectToDatabase from "./config/db.js";
 import { initializeAi } from "./services/ai.service.js";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the BrainBytes API" });

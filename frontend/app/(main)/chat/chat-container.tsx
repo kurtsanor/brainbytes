@@ -5,6 +5,9 @@ import { Message } from "@/types/message.types";
 import { User } from "@/types/user.types";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm";
 
 interface ChatInputProps {
   chatBoxStyle: string;
@@ -91,7 +94,7 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
 
   return (
     <div
-      className={`flex min-h-screen flex-col ${heroTextStyle} max-w-200 w-200 p-5 pb-0`}
+      className={`flex min-h-screen flex-col max-w-full ${heroTextStyle} max-w-200 w-200 p-5 pb-0`}
     >
       <div className={`flex flex-col ${heroTextStyle} ${chatContainerStyle}`}>
         {/* Show welcome message if no messages */}
@@ -142,7 +145,14 @@ const MessageBubble = ({ message, isUser }: MessageBubbleProps) => {
 
   return (
     <div className={`flex ${alignment} mb-8`}>
-      <p className={`${bgColor} leading-relaxed`}>{message.text}</p>
+      <div className={`markdown ${bgColor} leading-relaxed`}>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeHighlight]}
+        >
+          {message.text}
+        </ReactMarkdown>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "highlight.js/styles/github.css";
+import "./markdown.css";
 import { Toaster } from "react-hot-toast";
 import { TOASTER_DEFAULT_OPTIONS } from "@/constants/toaster";
 
