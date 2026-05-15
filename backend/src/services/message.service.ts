@@ -66,6 +66,10 @@ export const createMessage = async (
         };
       });
 
+    chatService.updateLastActive(chatId).catch((error) => {
+      console.error("Failed to update chat last active time:", error);
+    });
+
     // Save AI response
     const aiMessage = await Message.create({
       text: aiResult.response,

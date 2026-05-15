@@ -23,3 +23,11 @@ export const findChatsByUserId = async (userId: string) => {
     throw error;
   }
 };
+
+export const updateLastActive = async (chatId: string) => {
+  try {
+    await Chat.findByIdAndUpdate(chatId, { lastActive: new Date() });
+  } catch (error) {
+    throw error;
+  }
+};

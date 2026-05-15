@@ -94,7 +94,7 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
 
   return (
     <div
-      className={`flex min-h-screen flex-col max-w-full ${heroTextStyle} max-w-200 w-200 p-5 pb-0`}
+      className={`flex min-h-screen flex-col ${heroTextStyle} w-200 max-w-full p-5 pb-0`}
     >
       <div className={`flex flex-col ${heroTextStyle} ${chatContainerStyle}`}>
         {/* Show welcome message if no messages */}
@@ -141,7 +141,7 @@ const ChatHeader = ({ userDetails }: ChatHeaderProps) => {
 
 const MessageBubble = ({ message, isUser }: MessageBubbleProps) => {
   const alignment = isUser ? "justify-end" : "justify-start";
-  const bgColor = isUser ? "bg-neutral-100 max-w-[70%] p-3" : "";
+  const bgColor = isUser ? "bg-neutral-100 max-w-[70%] p-3" : "max-w-full";
 
   return (
     <div className={`flex ${alignment} mb-8`}>
