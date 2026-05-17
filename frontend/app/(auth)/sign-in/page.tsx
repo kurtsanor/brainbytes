@@ -7,8 +7,12 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
+import { useState } from "react";
+
 const SignInPage = () => {
   const router = useRouter();
+
+  const [loginError, setLoginError] = useState("");
 
   const {
     register,
@@ -25,6 +29,8 @@ const SignInPage = () => {
 
   const onSubmit = async ({ ...payload }: SignInFormValues) => {
     try {
+      setLoginError("");
+
       const response = await fetch("/api/login", {
         method: "POST",
         body: JSON.stringify(payload),
@@ -32,14 +38,21 @@ const SignInPage = () => {
       });
 
       if (!response.ok) {
-        toast.error("Invalid email or password");
+        setLoginError("Invalid email or password");  
+        toast.error("Login Failed!");    
         return;
       }
+
       const data = await response.json();
+
       localStorage.setItem("session-token", data.token);
+
+      toast.success("Login Successful!");
+
       router.replace("/chat");
     } catch (error) {
       console.log("An error occured: ", error);
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -80,6 +93,13 @@ const SignInPage = () => {
           {errors.password.message}
         </span>
       )}
+
+      {loginError && (
+        <span className="text-xs text-red-500 mt-2">
+          {loginError}
+        </span>
+      )}
+
       <div className="flex items-center mt-3 ml-0.5">
         <input type="checkbox" id="remember" className="mr-2" />
         <label
@@ -89,6 +109,7 @@ const SignInPage = () => {
           Remember me
         </label>
       </div>
+
       <Button
         isLoading={isSubmitting}
         loadingText="Logging in..."
