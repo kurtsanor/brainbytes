@@ -111,3 +111,18 @@ export const findAllMessages = async () => {
     throw error;
   }
 };
+
+export const getTotalMessagesSentByUserId = async (userId: string) => {
+  try {
+    // Get all chats for the user
+    const chats = await chatService.findChatsByUserId(userId);
+    const chatIds = chats.map((chat) => chat._id);
+    // Count messages that belong to those chats
+    return await Message.countDocuments({
+      chatId: { $in: chatIds },
+      isUser: true,
+    });
+  } catch (error) {
+    throw error;
+  }
+};

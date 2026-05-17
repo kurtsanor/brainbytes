@@ -31,3 +31,20 @@ export const updateLastActive = async (chatId: string) => {
     throw error;
   }
 };
+
+export const getTotalChatSessionsByUserId = async (userId: string) => {
+  try {
+    return await Chat.countDocuments({ userId });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getLastActiveChatByUserId = async (userId: string) => {
+  try {
+    const chat = await Chat.findOne({ userId }).sort({ lastActive: -1 });
+    return chat ? chat.lastActive : null;
+  } catch (error) {
+    throw error;
+  }
+};
