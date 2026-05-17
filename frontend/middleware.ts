@@ -31,5 +31,5 @@ export async function middleware(request: NextRequest) {
 
 // This tells Next.js which routes to protect
 export const config = {
-  matcher: ["/chat/:path*", "/admin/:path*"],
+  matcher: ["/chat/:path*", "/dashboard/:path*"],
 };
