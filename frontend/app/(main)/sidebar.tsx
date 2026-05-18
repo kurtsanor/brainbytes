@@ -10,7 +10,7 @@ const Sidebar = async () => {
   const chatHistory = await getUserConversations();
 
   return (
-    <aside className="flex-col w-66 border-r border-neutral-200 overflow-auto hidden md:flex">
+    <aside className="hidden md:flex flex-col w-66 shrink-0 border-r border-neutral-200 overflow-auto">
       <header className="flex flex-col p-1.5">
         <div className="flex items-center h-10 pl-1">
           <img
