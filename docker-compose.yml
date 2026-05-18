@@ -1,0 +1,76 @@
+services:
+  # next.js frontend
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:3000"
+    environment:
+      # backend talks to backend service by name
+      - API_BASE_URL_SERVER=${API_BASE_URL_SERVER:-http://backend:3001}
+      # browser talks to localhost
+      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL:-http://localhost:3001}
+      - JWT_SECRET=${JWT_SECRET}
+    # removed volumes - using production image now
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    # make sure frontend is up
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000').then(r => process.exit(r.ok || r.status === 307 || r.status === 308 ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # api server
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      # mongo service connection
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongo:27017/brainbytes}
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=${PORT:-3001}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+    # check if backend is responding
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3001').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # database
+  mongo:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+    # check if mongo is up
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# keep data between restarts
+volumes:
+  mongo-data:
