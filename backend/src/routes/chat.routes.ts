@@ -10,27 +10,14 @@ router.get("/", authenticate, messageController.findChatsByUserId);
 router.get(
   "/:id/messages",
   authenticate,
-  [
-    param("id")
-      .notEmpty()
-      .withMessage("Chat ID is required"),
-  ],
+  [param("id").notEmpty().withMessage("Chat ID is required")],
   messageController.findMessagesByChatId,
 );
 
 router.post(
-  "/:id",
+  "/{:id}",
   authenticate,
-  [
-    param("id")
-      .notEmpty()
-      .withMessage("Chat ID is required"),
-
-    body("text")
-      .trim()
-      .notEmpty()
-      .withMessage("Message text is required"),
-  ],
+  [body("text").trim().notEmpty().withMessage("Message text is required")],
   messageController.createMessage,
 );
 

@@ -94,7 +94,7 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
 
   return (
     <div
-      className={`flex min-h-screen flex-col ${heroTextStyle} w-full max-w-4xl px-4 sm:px-5 pb-0`}
+      className={`flex min-h-screen flex-col ${heroTextStyle} w-200 max-w-full p-5 pb-0`}
     >
       <div className={`flex flex-col ${heroTextStyle} ${chatContainerStyle}`}>
         {/* Show welcome message if no messages */}
