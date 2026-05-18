@@ -8,19 +8,11 @@ const router = Router();
 router.post(
   "/register",
   [
-    body("firstName")
-      .trim()
-      .notEmpty()
-      .withMessage("First name is required"),
+    body("firstName").trim().notEmpty().withMessage("First name is required"),
 
-    body("lastName")
-      .trim()
-      .notEmpty()
-      .withMessage("Last name is required"),
+    body("lastName").trim().notEmpty().withMessage("Last name is required"),
 
-    body("email")
-      .isEmail()
-      .withMessage("Valid email is required"),
+    body("email").isEmail().withMessage("Valid email is required"),
 
     body("password")
       .isLength({ min: 6 })
@@ -32,13 +24,9 @@ router.post(
 router.post(
   "/login",
   [
-    body("email")
-      .isEmail()
-      .withMessage("Valid email is required"),
+    body("email").isEmail().withMessage("Valid email is required"),
 
-    body("password")
-      .notEmpty()
-      .withMessage("Password is required"),
+    body("password").notEmpty().withMessage("Password is required"),
   ],
   authController.signIn,
 );

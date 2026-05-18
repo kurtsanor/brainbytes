@@ -10,12 +10,7 @@ router.get("/", authenticate, messageController.findAllMessages);
 router.post(
   "/",
   authenticate,
-  [
-    body("text")
-      .trim()
-      .notEmpty()
-      .withMessage("Message text is required"),
-  ],
+  [body("text").trim().notEmpty().withMessage("Message text is required")],
   messageController.createMessage,
 );
 
