@@ -69,7 +69,10 @@ const Sidebar = async () => {
           <span className="">Dashboard</span>
         </Link>
         {/* Profile Button */}
-        <button className="flex items-center gap-2 w-full p-1.5 transition-colors hover:bg-neutral-100 cursor-pointer">
+        <Link
+          href="/profile"
+          className="flex items-center gap-2 w-full p-1.5 transition-colors hover:bg-neutral-100 cursor-pointer"
+        >
           {/* Profile Icon SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +89,7 @@ const Sidebar = async () => {
             />
           </svg>
           <span className="">Profile</span>
-        </button>
+        </Link>
       </section>
       {/* Chat history */}
       <nav className="flex flex-col flex-1 p-2 overflow-y-auto">
