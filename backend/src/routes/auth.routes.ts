@@ -51,4 +51,21 @@ router.get(
   authController.googleAuthCallback
 );
 
+router.get(
+  "/github",
+  passport.authenticate("github", {
+    scope: ["user:email"],
+    session: false,
+  }),
+);
+
+router.get(
+  "/github/callback",
+  passport.authenticate("github", {
+    failureRedirect: "/login",
+    session: false,
+  }),
+  authController.githubAuthCallback,
+);
+
 export default router;

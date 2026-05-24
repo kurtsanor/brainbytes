@@ -21,6 +21,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.6.0",
     "@types/passport": "^1.0.17",
+    "@types/passport-github2": "^1.2.9",
     "@types/passport-google-oauth20": "^2.0.17",
     "glob": "^13.0.6",
     "jest": "^30.4.2",
@@ -40,6 +41,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.1",
     "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0"
   }
 }

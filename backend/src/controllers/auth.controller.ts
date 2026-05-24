@@ -79,3 +79,36 @@ export const googleAuthCallback = async (
     next(error);
   }
 };
+
+export const githubAuthCallback = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const user = req.user as { _id: string } | undefined;
+
+    if (!user?._id) {
+      throw new Error("GitHub authentication failed");
+    }
+
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1h" },
+    );
+
+    res.cookie("session-token", token, {
+      httpOnly: true,
+      secure: false, // true in production (HTTPS)
+      sameSite: "lax",
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
+    return res.redirect(`${process.env.FRONTEND_URL}/chat`);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
