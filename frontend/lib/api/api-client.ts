@@ -2,7 +2,7 @@ const DEFAULT_SERVER_API_BASE_URL = "http://backend:3001";
 const DEFAULT_CLIENT_API_BASE_URL = "http://localhost:3001";
 
 const getApiBaseUrl = (): string => {
-  // Server-side fetch
+  // Server-side (Docker / Next SSR)
   if (typeof window === "undefined") {
     return (
       process.env.API_BASE_URL_SERVER ||
@@ -12,8 +12,10 @@ const getApiBaseUrl = (): string => {
     );
   }
 
-  // Client-side code runs in the browser and cannot resolve Docker service names.
-  return process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_CLIENT_API_BASE_URL;
+  return (
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    DEFAULT_CLIENT_API_BASE_URL
+  );
 };
 
 const buildApiUrl = (endpoint: string): string => {
@@ -22,15 +24,22 @@ const buildApiUrl = (endpoint: string): string => {
   return `${baseUrl}${path}`;
 };
 
+const getToken = (): string | null => {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("session-token");
+};
+
 export async function apiClientFetch<T>(
   endpoint: string,
-  options?: RequestInit & { next?: NextFetchRequestConfig },
+  options?: RequestInit,
 ): Promise<T> {
+  const token = getToken();
+
   let headers: HeadersInit = {
     "Content-Type": "application/json",
     ...options?.headers,
   };
-  const token = localStorage.getItem("session-token");
+
   if (token) {
     headers = {
       ...headers,

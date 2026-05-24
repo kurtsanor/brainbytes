@@ -119,6 +119,7 @@ const SignInPage = () => {
       </Button>
       <button
         type="button"
+        onClick={() => window.location.href = "http://localhost:3001/api/auth/google"}
         className="border border-neutral-200 hover:bg-neutral-100 text-black p-1.5 mt-4 tracking-tight flex items-center justify-center gap-2 transition-colors"
       >
         <svg

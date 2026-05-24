@@ -2,6 +2,7 @@ import { Router } from "express";
 import { body } from "express-validator";
 import * as authController from "../controllers/auth.controller.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
+import passport from "passport";
 
 const router = Router();
 
@@ -32,5 +33,22 @@ router.post(
 );
 
 router.get("/me", authenticate, authController.getCurrentUser);
+
+router.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    session: false
+  })
+);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+    session: false
+  }),
+  authController.googleAuthCallback
+);
 
 export default router;

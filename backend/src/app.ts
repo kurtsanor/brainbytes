@@ -4,12 +4,22 @@ import messageRoutes from "./routes/message.route.js";
 import authRoutes from "./routes/auth.routes.js";
 import chatRoutes from "./routes/chat.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
+import passport from "./config/passport.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  }),
+);
 app.use(express.json());
+
+app.use(cookieParser());
+app.use(passport.initialize());
 
 app.use("/api/messages", messageRoutes);
 app.use("/api/auth", authRoutes);
