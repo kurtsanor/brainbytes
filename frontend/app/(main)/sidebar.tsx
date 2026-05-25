@@ -12,15 +12,50 @@ const Sidebar = async () => {
   return (
     <aside className="hidden md:flex flex-col w-66 shrink-0 border-r border-neutral-200 overflow-auto">
       <header className="flex flex-col p-1.5">
-        <div className="flex items-center h-10 pl-1">
-          <img
-            src="/bblogo1.png"
-            alt="BrainBytes Logo"
-            className="w-7 h-6 mr-1"
-          />
-          <h1 className="text-lg font-semibold tracking-tight mt-1">
-            BrainBytes
-          </h1>
+        <div className="flex justify-between items-center w-full">
+          <div className="flex items-center h-10 pl-1">
+            <img
+              src="/bblogo1.png"
+              alt="BrainBytes Logo"
+              className="w-7 h-6 mr-1"
+            />
+            <h1 className="text-lg font-semibold tracking-tight scale-y-115 mt-1">
+              BrainBytes
+            </h1>
+          </div>
+
+          {/* Sidebar Toggle Button (Square Icon Grid) */}
+          <button
+            className="h-8 w-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-100 transition-colors"
+            aria-label="Toggle sidebar"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.9}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              {/* Sharp, full outer box container (no rx rounded values) */}
+              <rect
+                width="18"
+                height="18"
+                x="3"
+                y="3"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
+              />
+              {/* Vertical sidebar panel divider line */}
+              <path d="M9 3v18" strokeLinecap="square" strokeLinejoin="miter" />
+              {/* Left-pointing collapse arrow */}
+              <path
+                d="m15 15-3-3 3-3"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
+              />
+            </svg>
+          </button>
         </div>
       </header>
       <section className="p-2 mb-2 flex flex-col gap-1">

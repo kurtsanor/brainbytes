@@ -38,8 +38,8 @@ const SignInPage = () => {
       });
 
       if (!response.ok) {
-        setLoginError("Invalid email or password");  
-        toast.error("Login Failed!");    
+        setLoginError("Invalid email or password");
+        toast.error("Login Failed!");
         return;
       }
 
@@ -95,9 +95,7 @@ const SignInPage = () => {
       )}
 
       {loginError && (
-        <span className="text-xs text-red-500 mt-2">
-          {loginError}
-        </span>
+        <span className="text-xs text-red-500 mt-2">{loginError}</span>
       )}
 
       <div className="flex items-center mt-3 ml-0.5">
@@ -119,7 +117,9 @@ const SignInPage = () => {
       </Button>
       <button
         type="button"
-        onClick={() => window.location.href = "http://localhost:3001/api/auth/google"}
+        onClick={() =>
+          (window.location.href = "http://localhost:3001/api/auth/google")
+        }
         className="border border-neutral-200 hover:bg-neutral-100 text-black p-1.5 mt-4 tracking-tight flex items-center justify-center gap-2 transition-colors"
       >
         <svg
@@ -149,7 +149,9 @@ const SignInPage = () => {
       </button>
       <button
         type="button"
-        onClick={() => {window.location.href ="http://localhost:3001/api/auth/github";}}
+        onClick={() =>
+          (window.location.href = "http://localhost:3001/api/auth/github")
+        }
         className="border border-neutral-200 hover:bg-neutral-100 text-black p-1.5 mt-2 tracking-tight flex items-center justify-center gap-2 transition-colors"
       >
         <svg

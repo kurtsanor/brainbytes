@@ -160,7 +160,8 @@ const MessageBubble = ({ message, isUser }: MessageBubbleProps) => {
 const ChatInput = ({ chatBoxStyle, handleSend, isTyping }: ChatInputProps) => {
   const [messageInput, setMessageInput] = useState("");
 
-  const executeSend = () => {
+  const executeSend = (e?: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
     handleSend(messageInput);
     setMessageInput("");
   };
@@ -173,13 +174,22 @@ const ChatInput = ({ chatBoxStyle, handleSend, isTyping }: ChatInputProps) => {
         placeholder="How can I help you today?"
         onChange={(e) => setMessageInput(e.target.value)}
         value={messageInput}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            executeSend();
+          }
+        }}
       />
       <div className="flex justify-end">
         <button
           disabled={isTyping}
           className="p-1.5 bg-brand-blue text-white hover:bg-brand-blue-hover transition-colors disabled:bg-gray-300 cursor-pointer"
           aria-label="Send message"
-          onClick={executeSend}
+          onClick={() => {
+            executeSend();
+          }}
+          type="button"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -45,7 +45,7 @@ services:
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
       - GITHUB_CALLBACK_URL=${GITHUB_CALLBACK_URL}
-      - FRONTEND_URL=${FRONTEND_URL}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:8080}
     depends_on:
       mongo:
         condition: service_healthy

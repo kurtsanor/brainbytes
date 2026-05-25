@@ -24,19 +24,21 @@ const AccountMenu = ({ user }: AccountMenuProps) => {
   };
 
   return (
-    <div className="flex items-center justify-between p-2 hover:bg-neutral-100 cursor-pointer transition-colors rounded-lg group">
+    <div className="flex items-center justify-between gap-1 p-2 hover:bg-neutral-100 cursor-pointer transition-colors rounded-lg group">
       {/* Left Side: User Info */}
-      <div className="flex items-center">
+      <div className="flex min-w-0 items-center gap-1">
         <img
           src="/userpp.jpeg"
           alt="User Profile"
-          className="w-10 h-10 mr-2 rounded-full object-cover"
+          className="h-10 w-10 shrink-0 flex-none mr-2 rounded-full object-cover"
         />
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-col">
           <span className="font-semibold text-sm">
             {user?.firstName} {user?.lastName}
           </span>
-          <span className="text-xs text-neutral-500">{user?.email}</span>
+          <span className="max-w-48 truncate text-xs text-neutral-500">
+            {user?.email}
+          </span>
         </div>
       </div>
 
@@ -44,7 +46,7 @@ const AccountMenu = ({ user }: AccountMenuProps) => {
       <button
         type="button"
         onClick={handleLogout}
-        className="p-2 hover:bg-neutral-200 rounded-md transition-colors text-neutral-500 hover:text-red-600"
+        className="shrink-0 p-2 hover:bg-neutral-200 rounded-md transition-colors text-neutral-500 hover:text-red-600"
         title="Logout"
       >
         <svg

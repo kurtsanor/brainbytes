@@ -61,20 +61,21 @@ export const googleAuthCallback = async (
       throw new Error("Google authentication failed");
     }
 
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET!,
-      { expiresIn: "1h" },
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+      expiresIn: "1h",
+    });
 
     res.cookie("session-token", token, {
       httpOnly: true,
-      secure: false, // true in production (HTTPS)
+      secure: false,
       sameSite: "lax",
-      maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 60 * 60 * 1000,
+      path: "/",
     });
 
-    return res.redirect(`${process.env.FRONTEND_URL}/chat`);
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/oauth?token=${encodeURIComponent(token)}`,
+    );
   } catch (error) {
     next(error);
   }
@@ -92,23 +93,22 @@ export const githubAuthCallback = async (
       throw new Error("GitHub authentication failed");
     }
 
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET!,
-      { expiresIn: "1h" },
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+      expiresIn: "1h",
+    });
 
     res.cookie("session-token", token, {
       httpOnly: true,
-      secure: false, // true in production (HTTPS)
+      secure: false,
       sameSite: "lax",
-      maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 60 * 60 * 1000,
+      path: "/",
     });
 
-    return res.redirect(`${process.env.FRONTEND_URL}/chat`);
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/oauth?token=${encodeURIComponent(token)}`,
+    );
   } catch (error) {
     next(error);
   }
 };
-
-

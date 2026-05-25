@@ -11,6 +11,7 @@ export const signUp = async (signUpRequest: SignUpRequest) => {
     }
 
     const hashedPassword = await bcrypt.hash(signUpRequest.password, 10);
+
     await User.create({
       firstName: signUpRequest.firstName,
       lastName: signUpRequest.lastName,
@@ -28,7 +29,7 @@ export const signIn = async (email: string, password: string) => {
     if (!user) {
       throw new Error("Invalid email or password");
     }
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password!);
     if (!isMatch) {
       throw new Error("Invalid email or password");
     }
