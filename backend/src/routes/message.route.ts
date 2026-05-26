@@ -5,8 +5,14 @@ import { authenticate } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
+/*
+ * Return all messages visible to the current user.
+ */
 router.get("/", authenticate, messageController.findAllMessages);
 
+/*
+ * Create a new message in the current chat session.
+ */
 router.post(
   "/",
   authenticate,

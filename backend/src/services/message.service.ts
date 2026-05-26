@@ -3,6 +3,15 @@ import type { MessageDto } from "../types/message.types.js";
 import * as aiService from "./ai.service.js";
 import * as chatService from "./chat.service.js";
 
+/**
+ * Persist a user prompt, generate an AI reply, and link both messages to a chat session.
+ *
+ * @param text - The user's message text.
+ * @param chatId - The chat identifier, or null when a new chat should be created.
+ * @param userId - The authenticated user's database identifier.
+ * @returns A promise that resolves to the created user and AI messages.
+ * @throws If the chat lookup, AI generation, or persistence fails.
+ */
 export const createMessage = async (
   text: string,
   chatId: string | null,
@@ -85,6 +94,14 @@ export const createMessage = async (
   }
 };
 
+/**
+ * Return the messages for a chat after verifying ownership.
+ *
+ * @param chatId - The chat identifier to query.
+ * @param userId - The authenticated user's database identifier.
+ * @returns A promise that resolves to the chat messages in chronological order.
+ * @throws If the chat does not exist, does not belong to the user, or the query fails.
+ */
 export const findMessagesByChatId = async (chatId: string, userId: string) => {
   try {
     // Check if chat exists
@@ -104,6 +121,12 @@ export const findMessagesByChatId = async (chatId: string, userId: string) => {
   }
 };
 
+/**
+ * Return every stored message in chronological order.
+ *
+ * @returns A promise that resolves to all messages sorted by creation time.
+ * @throws If the database query fails.
+ */
 export const findAllMessages = async () => {
   try {
     return await Message.find().sort({ createdAt: 1 });
@@ -112,6 +135,13 @@ export const findAllMessages = async () => {
   }
 };
 
+/**
+ * Count the number of user-authored messages across all chats owned by a user.
+ *
+ * @param userId - The authenticated user's database identifier.
+ * @returns A promise that resolves to the total number of user messages.
+ * @throws If the chat or message query fails.
+ */
 export const getTotalMessagesSentByUserId = async (userId: string) => {
   try {
     // Get all chats for the user

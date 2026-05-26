@@ -1,5 +1,10 @@
 import { huggingFaceAxios } from "../config/axios.js";
 
+/**
+ * Initialize the AI client and report whether the Hugging Face token is present.
+ *
+ * @returns Nothing. Logs startup status for the AI integration.
+ */
 export const initializeAi = () => {
   console.log("AI service initialized");
 
@@ -8,6 +13,13 @@ export const initializeAi = () => {
   }
 };
 
+/**
+ * Ask the model for a concise title that summarizes the user's first message.
+ *
+ * @param prompt - The initial user message.
+ * @returns A promise that resolves to a short topic title.
+ * @throws If the Hugging Face request fails.
+ */
 export const generateTopicTitle = async (prompt: string): Promise<string> => {
   const systemInstruction =
     "You are a title generator for a chatbot. Given the user's first message, respond with a short, concise conversation title (3-6 words max). The title should capture the main topic or intent. Respond with ONLY the title — no punctuation at the end, no explanation, no quotes.";
@@ -26,6 +38,13 @@ export const generateTopicTitle = async (prompt: string): Promise<string> => {
   return response.data.choices[0].message.content;
 };
 
+/**
+ * Classify the prompt and generate a tutor-style response.
+ *
+ * @param question - The learner question or prompt.
+ * @returns A promise that resolves to the detected category and generated response.
+ * @throws If the Hugging Face request fails.
+ */
 export const generateResponse = async (
   question: string,
 ): Promise<{ category: string; response: string }> => {
@@ -159,7 +178,13 @@ export const generateResponse = async (
   }
 };
 
-// More detailed fallback responses when the API call fails
+/**
+ * Provide a deterministic fallback response when the model call fails.
+ *
+ * @param category - The detected content category.
+ * @param question - The original learner question.
+ * @returns A fallback response string.
+ */
 function getDetailedResponse(category: string, question: string) {
   const lowerQuestion = question.toLowerCase();
 

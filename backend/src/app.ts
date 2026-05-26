@@ -9,7 +9,9 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-// Middleware
+/*
+ * Allow the frontend origin to call the API with cookies enabled.
+ */
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -19,14 +21,22 @@ app.use(
 app.use(express.json());
 
 app.use(cookieParser());
+/*
+ * Passport is used for OAuth-based sign-in flows.
+ */
 app.use(passport.initialize());
 
+/*
+ * Mount the API routers by domain area.
+ */
 app.use("/api/messages", messageRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
-// Error handling middleware
+/*
+ * Centralized error handler keeps API responses consistent.
+ */
 app.use(
   (
     error: Error,

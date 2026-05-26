@@ -1,3 +1,6 @@
+/**
+ * Request and JWT payload shapes used by the authentication flow.
+ */
 export interface SignUpRequest {
   firstName: string;
   lastName: string;

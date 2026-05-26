@@ -3,6 +3,14 @@ import * as authService from "../services/auth.service.js";
 import jwt from "jsonwebtoken";
 import type { JwtClaims } from "../types/auth.types.js";
 
+/**
+ * Create a local account using the validated sign-up payload.
+ *
+ * @param req - Express request containing the sign-up body.
+ * @param res - Express response used to return the result.
+ * @param next - Express next function used to forward errors.
+ * @returns A JSON response confirming account creation.
+ */
 export const signUp = async (
   req: Request,
   res: Response,
@@ -19,6 +27,14 @@ export const signUp = async (
   }
 };
 
+/**
+ * Authenticate a user with email and password and return a session token.
+ *
+ * @param req - Express request containing the login payload.
+ * @param res - Express response used to return the token.
+ * @param next - Express next function used to forward errors.
+ * @returns A JSON response containing the issued session token.
+ */
 export const signIn = async (
   req: Request,
   res: Response,
@@ -35,6 +51,14 @@ export const signIn = async (
   }
 };
 
+/**
+ * Resolve the authenticated user's profile from the JWT claims.
+ *
+ * @param req - Express request containing authenticated user claims.
+ * @param res - Express response used to return the user profile.
+ * @param next - Express next function used to forward errors.
+ * @returns A JSON response containing the current user record.
+ */
 export const getCurrentUser = async (
   req: Request,
   res: Response,
@@ -49,6 +73,14 @@ export const getCurrentUser = async (
   }
 };
 
+/**
+ * Finalize Google OAuth by issuing an application token and redirecting back to the frontend.
+ *
+ * @param req - Express request populated by Passport with the authenticated user.
+ * @param res - Express response used to set the session cookie and redirect.
+ * @param next - Express next function used to forward errors.
+ * @returns A redirect response to the frontend OAuth landing page.
+ */
 export const googleAuthCallback = async (
   req: Request,
   res: Response,
@@ -81,6 +113,14 @@ export const googleAuthCallback = async (
   }
 };
 
+/**
+ * Finalize GitHub OAuth by issuing an application token and redirecting back to the frontend.
+ *
+ * @param req - Express request populated by Passport with the authenticated user.
+ * @param res - Express response used to set the session cookie and redirect.
+ * @param next - Express next function used to forward errors.
+ * @returns A redirect response to the frontend OAuth landing page.
+ */
 export const githubAuthCallback = async (
   req: Request,
   res: Response,

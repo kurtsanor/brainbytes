@@ -5,8 +5,14 @@ import { authenticate } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
+/*
+ * Return the current user's chat list.
+ */
 router.get("/", authenticate, messageController.findChatsByUserId);
 
+/*
+ * Return the messages for a specific chat.
+ */
 router.get(
   "/:id/messages",
   authenticate,
@@ -14,6 +20,9 @@ router.get(
   messageController.findMessagesByChatId,
 );
 
+/*
+ * Create a message inside a chat by id.
+ */
 router.post(
   "/{:id}",
   authenticate,

@@ -5,17 +5,26 @@ import { initializeAi } from "./services/ai.service.js";
 
 const PORT = process.env.PORT || 3001;
 
+/*
+ * Health check and root response for the backend service.
+ */
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the BrainBytes API" });
 });
 
-// Establish database connection
+/*
+ * Connect to MongoDB before accepting traffic.
+ */
 await connectToDatabase();
 
-// Initialize AI service
+/*
+ * Warm up the AI client once at startup so requests can reuse it.
+ */
 initializeAi();
 
-// Start the server
+/*
+ * Start listening only after dependencies are ready.
+ */
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

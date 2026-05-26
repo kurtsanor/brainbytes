@@ -1,5 +1,8 @@
 import { model, Schema } from "mongoose";
 
+/**
+ * User documents support both local credentials and OAuth identity links.
+ */
 const userSchema = new Schema(
   {
     firstName: { type: String, required: true },

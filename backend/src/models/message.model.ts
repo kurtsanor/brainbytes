@@ -1,6 +1,9 @@
 import { model, Schema } from "mongoose";
 import type { Message } from "../types/message.types.js";
 
+/**
+ * Message documents store the user prompt and the AI reply payload.
+ */
 const messageSchema = new Schema<Message>(
   {
     text: { type: String, required: true, trim: true },

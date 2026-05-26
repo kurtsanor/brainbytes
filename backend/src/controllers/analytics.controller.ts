@@ -2,6 +2,14 @@ import type { Request, Response, NextFunction } from "express";
 import * as analyticsService from "../services/analytics.service.js";
 import type { JwtClaims } from "../types/auth.types.js";
 
+/**
+ * Assemble the dashboard analytics payload for the current user.
+ *
+ * @param req - Express request containing authenticated user claims and query params.
+ * @param res - Express response used to return analytics data.
+ * @param next - Express next function used to forward errors.
+ * @returns A JSON response containing the user's analytics summary.
+ */
 export const getUserAnalytics = async (
   req: Request,
   res: Response,

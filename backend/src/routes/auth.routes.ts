@@ -6,6 +6,9 @@ import passport from "passport";
 
 const router = Router();
 
+/*
+ * Local account registration.
+ */
 router.post(
   "/register",
   [
@@ -22,6 +25,9 @@ router.post(
   authController.signUp,
 );
 
+/*
+ * Local email and password login.
+ */
 router.post(
   "/login",
   [
@@ -32,25 +38,37 @@ router.post(
   authController.signIn,
 );
 
+/*
+ * Return the authenticated user's profile.
+ */
 router.get("/me", authenticate, authController.getCurrentUser);
 
+/*
+ * Start the Google OAuth flow.
+ */
 router.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
-    session: false
-  })
+    session: false,
+  }),
 );
 
+/*
+ * Handle the Google OAuth callback.
+ */
 router.get(
   "/google/callback",
   passport.authenticate("google", {
     failureRedirect: "/login",
-    session: false
+    session: false,
   }),
-  authController.googleAuthCallback
+  authController.googleAuthCallback,
 );
 
+/*
+ * Start the GitHub OAuth flow.
+ */
 router.get(
   "/github",
   passport.authenticate("github", {
@@ -59,6 +77,9 @@ router.get(
   }),
 );
 
+/*
+ * Handle the GitHub OAuth callback.
+ */
 router.get(
   "/github/callback",
   passport.authenticate("github", {

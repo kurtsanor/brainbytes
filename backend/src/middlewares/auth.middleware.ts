@@ -10,6 +10,14 @@ declare global {
   }
 }
 
+/**
+ * Validate the bearer token on authenticated requests.
+ *
+ * @param req - Express request containing the Authorization header.
+ * @param res - Express response used to return authorization errors.
+ * @param next - Express next function used to continue processing.
+ * @returns Nothing. Calls next() when the token is valid.
+ */
 export const authenticate = (
   req: Request,
   res: Response,
@@ -27,6 +35,7 @@ export const authenticate = (
 
     const token = header.split(" ")[1]!;
 
+    // Store the verified claims on the request for downstream handlers.
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtClaims;
     req.user = decoded;
     next();

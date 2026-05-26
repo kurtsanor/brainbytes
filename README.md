@@ -33,7 +33,7 @@ _Note: MongoDB Atlas is NOT needed for Docker Compose. A local MongoDB container
 
 ### 1. Create Environment File
 
-Copy the template file and fill in your values:
+Copy the template file in the project root and fill in your values:
 
 ```bash
 # Copy template from root
@@ -44,6 +44,17 @@ Then edit `.env` and add:
 
 - `HUGGINGFACE_API_KEY` — your Hugging Face API token
 - `JWT_SECRET` — any secure random string
+- `GOOGLE_CLIENT_ID` — OAuth client ID from Google Cloud Console
+- `GOOGLE_CLIENT_SECRET` — OAuth client secret from Google Cloud Console
+- `GITHUB_CLIENT_ID` — OAuth client ID from GitHub Developer Settings
+- `GITHUB_CLIENT_SECRET` — OAuth client secret from GitHub Developer Settings
+- `GOOGLE_CALLBACK_URL` — `http://localhost:3001/api/auth/google/callback`
+- `GITHUB_CALLBACK_URL` — `http://localhost:3001/api/auth/github/callback`
+- `NEXTAUTH_URL` — `http://localhost:8080`
+- `NEXTAUTH_SECRET` — any secure random string
+- `FRONTEND_URL` — `http://localhost:8080`
+
+The Docker Compose setup reads these values from the root `.env` file and passes them into the backend and frontend containers.
 
 **To get your Hugging Face API Token:**
 
@@ -51,6 +62,24 @@ Then edit `.env` and add:
 2. Click "Create new token"
 3. Give it a name and select the desired scopes (e.g. `read`, `write`, or `Fine-grained`)
 4. Create the token and add it to your `.env` file
+
+**To get your Google OAuth credentials:**
+
+1. Go to https://console.cloud.google.com/
+2. Create or select a project
+3. Open APIs & Services > Credentials
+4. Create an OAuth client ID for a Web application
+5. Add `http://localhost:3001/api/auth/google/callback` to the authorized redirect URIs
+6. Copy the client ID and client secret into `.env`
+
+**To get your GitHub OAuth credentials:**
+
+1. Go to https://github.com/settings/developers
+2. Create a new OAuth App
+3. Set the Authorization callback URL to `http://localhost:3001/api/auth/github/callback`
+4. Copy the client ID and client secret into `.env`
+
+If you change the backend port or run the app on a different host, update the callback URLs in both the OAuth provider settings and your `.env` file so they match exactly.
 
 ### 2. Build and Start All Services
 

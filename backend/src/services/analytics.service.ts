@@ -3,10 +3,22 @@ import * as messageService from "./message.service.js";
 import Chat from "../models/chat.model.js";
 import Message from "../models/message.model.js";
 
-// Helper to format YYYY-MM-DD for a Date
+/**
+ * Format a Date as YYYY-MM-DD for chart labels and aggregations.
+ *
+ * @param d - The date to format.
+ * @returns The formatted date string.
+ */
 const toYMD = (d: Date) => d.toISOString().slice(0, 10);
 
-// Dashboard analytics service to aggregate user activity data
+/**
+ * Build dashboard analytics from the user's chats and messages.
+ *
+ * @param userId - The authenticated user's database identifier.
+ * @param days - The number of days to include in the time series.
+ * @returns A promise that resolves to the aggregated analytics payload.
+ * @throws If any database aggregation fails.
+ */
 export const getUserAnalytics = async (userId: string, days = 7) => {
   try {
     const [totalChatSessions, totalMessagesSent, lastActiveChat] =

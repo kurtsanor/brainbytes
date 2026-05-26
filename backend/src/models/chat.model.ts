@@ -1,5 +1,8 @@
 import { model, Schema } from "mongoose";
 
+/**
+ * Chat documents track one conversation thread per user.
+ */
 const chatSchema = new Schema(
   {
     title: {
