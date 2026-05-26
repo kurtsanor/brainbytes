@@ -1,5 +1,8 @@
 import { huggingFaceAxios } from "../config/axios.js";
 
+// Default chat model used for Hugging Face requests (Flash = lower cost than Pro)
+const DEFAULT_HUGGINGFACE_CHAT_MODEL =
+  "meta-llama/Meta-Llama-3-70B-Instruct:cheapest";
 /**
  * Initialize the AI client and report whether the Hugging Face token is present.
  *
@@ -32,7 +35,7 @@ export const generateTopicTitle = async (prompt: string): Promise<string> => {
         content: prompt,
       },
     ],
-    model: "meta-llama/Llama-3.1-8B-Instruct:cheapest",
+    model: DEFAULT_HUGGINGFACE_CHAT_MODEL,
     stream: false,
   });
   return response.data.choices[0].message.content;
@@ -148,7 +151,7 @@ export const generateResponse = async (
           content: question,
         },
       ],
-      model: "meta-llama/Llama-3.1-8B-Instruct:cheapest",
+      model: DEFAULT_HUGGINGFACE_CHAT_MODEL,
       stream: false,
     });
 
