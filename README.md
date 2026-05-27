@@ -21,6 +21,14 @@ BrainBytes is an AI-powered tutoring platform designed to provide accessible aca
 - Cloud Provider: Oracle Cloud Free Tier
 - Monitoring: Prometheus & Grafana
 
+## System Requirements
+
+- Supported OS: 64-bit Linux, Windows 10/11 (64-bit), macOS 12+ (Apple Silicon and Intel supported)
+- CPU: 2+ cores (4+ recommended)
+- Memory: 4 GB RAM minimum (8 GB recommended)
+- Disk: 5 GB free disk space
+- Docker: Docker Engine / Docker Desktop installed for running the Compose setup
+
 ## Prerequisites
 
 - **Docker**: v20.x or higher
@@ -146,3 +154,36 @@ npm run dev
 ```
 
 You'll need MongoDB running locally or set `MONGODB_URI` to point to a remote instance.
+
+## Development Workflow
+
+Simple steps for contributors:
+
+1. Pull latest main:
+
+```bash
+git checkout main
+git pull origin main
+```
+
+2. Create feature branch:
+
+```bash
+git checkout -b feat/short-description
+```
+
+3. Implement, test and lint locally.
+
+4. Commit, push and open a PR:
+
+```bash
+git add .
+git commit -m "feat: short description"
+git push -u origin feat/short-description
+```
+
+## Brainbytes architecture
+
+Below is the system architecture diagram:
+
+![System architecture drawio (1)](https://github.com/user-attachments/assets/1addb814-5522-4a39-84db-68b241b16863)
