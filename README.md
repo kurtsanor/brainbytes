@@ -39,6 +39,16 @@ _Note: MongoDB Atlas is NOT needed for Docker Compose. A local MongoDB container
 
 ## Running the Application with Docker Compose
 
+Before you begin:
+
+- Ensure Docker Desktop (or Docker Engine) is running on your machine.
+- Clone the repository and change into the project folder:
+
+```bash
+git clone https://github.com/kurtsanor/brainbytes.git
+cd brainbytes
+```
+
 ### 1. Create Environment File
 
 Copy the template file in the project root and fill in your values:
