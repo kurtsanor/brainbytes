@@ -64,5 +64,12 @@ jobs:
           GITHUB_CALLBACK_URL: ${{ secrets.GITHUB_CALLBACK_URL }}
         run: |
           docker-compose -f docker-compose.yml up -d
+          # give services a moment to start before checking
+          sleep 10
           docker-compose ps
-          docker-compose down
+          echo "--- Backend logs (tail 200) ---"
+          docker-compose logs backend --tail=200 || true
+          echo "--- Full docker ps ---"
+          docker ps -a
+          # Bring everything down after inspection
+          docker-compose down --volumes --remove-orphans
