@@ -51,8 +51,17 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      # 6. Test Docker Compose
+      # 6. Test Docker Compose with injected GitHub Secrets
       - name: Test Docker Compose
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
+          GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
+          GITHUB_CALLBACK_URL: ${{ secrets.GITHUB_CALLBACK_URL }}
         run: |
           docker-compose -f docker-compose.yml up -d
           docker-compose ps
