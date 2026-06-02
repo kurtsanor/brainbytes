@@ -20,7 +20,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "16"
-        #   cache: "npm"
+          cache: "npm"
+          # This tells the cacher to watch both lockfiles for changes:
+          cache-dependency-path: |
+            frontend/package-lock.json
+            backend/package-lock.json
 
       # Frontend linting
       - name: Install frontend dependencies
