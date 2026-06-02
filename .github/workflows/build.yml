@@ -51,36 +51,6 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      # 6. Print secret presence without exposing values
-      - name: Print secret presence
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
-          GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
-          GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
-          GITHUB_CALLBACK_URL: ${{ secrets.GITHUB_CALLBACK_URL }}
-        run: |
-          print_var() {
-            if [ -n "${!1}" ]; then
-              echo "$1=set"
-            else
-              echo "$1=missing"
-            fi
-          }
-
-          print_var JWT_SECRET
-          print_var HUGGINGFACE_API_KEY
-          print_var GOOGLE_CLIENT_ID
-          print_var GOOGLE_CLIENT_SECRET
-          print_var GOOGLE_CALLBACK_URL
-          print_var GITHUB_CLIENT_ID
-          print_var GITHUB_CLIENT_SECRET
-          print_var GITHUB_CALLBACK_URL
-
-      # 7. Test Docker Compose with injected GitHub Secrets
       - name: Test Docker Compose
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
@@ -88,17 +58,10 @@ jobs:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
-          GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
-          GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
-          GITHUB_CALLBACK_URL: ${{ secrets.GITHUB_CALLBACK_URL }}
+          GITHUB_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
+          GITHUB_CALLBACK_URL: ${{ secrets.GH_CALLBACK_URL }}
         run: |
           docker-compose -f docker-compose.yml up -d
-          # give services a moment to start before checking
-          sleep 10
           docker-compose ps
-          echo "--- Backend logs (tail 200) ---"
-          docker-compose logs backend --tail=200 || true
-          echo "--- Full docker ps ---"
-          docker ps -a
-          # Bring everything down after inspection
-          docker-compose down --volumes --remove-orphans
+          docker-compose down
