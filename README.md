@@ -1,7 +1,6 @@
 # BrainBytes AI Tutoring Platform
 
-[![CI Status](https://github.com/kurtsanor/brainbytes/actions/workflows/ci.yml/badge.svg)](https://github.com/kurtsanor/brainbytes/actions/workflows/ci.yml)
-[![Docker Build Status](https://github.com/kurtsanor/brainbytes/actions/workflows/build.yml/badge.svg)](https://github.com/kurtsanor/brainbytes/actions/workflows/build.yml)
+[![BrainBytes CI/CD](https://github.com/kurtsanor/brainbytes/actions/workflows/main.yml/badge.svg)](https://github.com/kurtsanor/brainbytes/actions/workflows/main.yml)
 
 ## Project Overview
 
