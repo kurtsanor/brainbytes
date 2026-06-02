@@ -1,5 +1,8 @@
 # BrainBytes AI Tutoring Platform
 
+[![CI Status](https://github.com/kurtsanor/brainbytes/actions/workflows/ci.yml/badge.svg)](https://github.com/kurtsanor/brainbytes/actions/workflows/ci.yml)
+[![Docker Build Status](https://github.com/kurtsanor/brainbytes/actions/workflows/build.yml/badge.svg)](https://github.com/kurtsanor/brainbytes/actions/workflows/build.yml)
+
 ## Project Overview
 
 BrainBytes is an AI-powered tutoring platform designed to provide accessible academic assistance to Filipino students. This project implements the platform using modern DevOps practices and containerization.
