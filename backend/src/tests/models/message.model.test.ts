@@ -2,7 +2,9 @@ import mongoose from "mongoose";
 import Message from "../../models/message.model.js";
 import Chat from "../../models/chat.model.js";
 import User from "../../models/user.model.js";
-import connectToTestDatabase from "../../config/testDb.js";
+import connectToTestDatabase, {
+  disconnectTestDatabase,
+} from "../../config/testDb.js";
 
 describe("Message Model", () => {
   let userId: mongoose.Types.ObjectId;
@@ -34,7 +36,8 @@ describe("Message Model", () => {
       await db.dropDatabase();
     }
 
-    await mongoose.disconnect();
+    // 2. Use the in-memory cleaner function instead of raw mongoose.disconnect()
+    await disconnectTestDatabase();
   });
 
   beforeEach(async () => {
@@ -143,7 +146,7 @@ describe("Message Model", () => {
       await msg.save();
 
       expect((msg as any).updatedAt.getTime()).toBeGreaterThan(
-        oldUpdatedAt.getTime()
+        oldUpdatedAt.getTime(),
       );
     });
   });

@@ -1,38 +1,23 @@
 import mongoose from "mongoose";
 import User from "../../models/user.model.js";
-import connectToDatabase from "../../config/testDb.js";
+// Import both the connector and the disconnect cleaner
+import connectToDatabase, {
+  disconnectTestDatabase,
+} from "../../config/testDb.js";
 
 describe("User Model", () => {
   beforeAll(async () => {
     await connectToDatabase();
   });
 
-//   it("connection check", async () => {
-//     console.log("DB Name:", mongoose.connection.name);
-//     console.log("Host:", mongoose.connection.host);
-//     console.log("Collection:", User.collection.name);
-//   });
-
-//   it("debug user count", async () => {
-//   const count = await User.countDocuments();
-
-//   console.log("USER COUNT:", count);
-
-//   const users = await User.find({});
-
-//   console.log("USERS:", users);
-
-//   expect(true).toBe(true);
-// });
-
   afterAll(async () => {
+    // Drop the virtual database collections cleanly
     const db = mongoose.connection.db;
-
     if (db) {
       await db.dropDatabase();
     }
-
-    await mongoose.disconnect();
+    // Shut down the in-memory server completely
+    await disconnectTestDatabase();
   });
 
   beforeEach(async () => {
@@ -53,7 +38,7 @@ describe("User Model", () => {
       const user = new User({
         firstName: "John",
         email: "john@example.com",
-      })
+      });
 
       await expect(user.save()).rejects.toThrow();
     });
@@ -107,7 +92,7 @@ describe("User Model", () => {
           firstName: "Jane",
           lastName: "Doe",
           email: "john@example.com",
-        })
+        }),
       ).rejects.toThrow();
     });
 
@@ -125,7 +110,7 @@ describe("User Model", () => {
           lastName: "Doe",
           email: "jane@example.com",
           googleId: "google123",
-        })
+        }),
       ).rejects.toThrow();
     });
 
@@ -143,7 +128,7 @@ describe("User Model", () => {
           lastName: "Doe",
           email: "jane@example.com",
           githubId: "github123",
-        })
+        }),
       ).rejects.toThrow();
     });
   });

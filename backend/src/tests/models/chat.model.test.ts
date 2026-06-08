@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import Chat from "../../models/chat.model.js";
 import User from "../../models/user.model.js";
-import connectToTestDatabase from "../../config/testDb.js";
+import connectToTestDatabase, {
+  disconnectTestDatabase,
+} from "../../config/testDb.js";
 
 describe("Chat Model", () => {
   let userId: mongoose.Types.ObjectId;
@@ -26,7 +28,8 @@ describe("Chat Model", () => {
       await db.dropDatabase();
     }
 
-    await mongoose.disconnect();
+    // Safely shut down the memory server instance
+    await disconnectTestDatabase();
   });
 
   beforeEach(async () => {
@@ -56,6 +59,7 @@ describe("Chat Model", () => {
         userId,
         subject: "Math",
         device: "desktop",
+        status: "active",
       });
 
       expect(chat._id).toBeDefined();
@@ -141,9 +145,7 @@ describe("Chat Model", () => {
       chat.title = "Updated Title";
       await chat.save();
 
-      expect(chat.updatedAt.getTime()).toBeGreaterThan(
-        oldUpdatedAt.getTime()
-      );
+      expect(chat.updatedAt.getTime()).toBeGreaterThan(oldUpdatedAt.getTime());
     });
   });
 });
