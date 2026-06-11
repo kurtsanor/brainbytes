@@ -10,6 +10,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  type ChartOptions,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
@@ -104,7 +105,7 @@ export default function LineChart({ days = 7, chartData }: Props) {
     ],
   };
 
-  const options: any = {
+  const options: ChartOptions<"line"> = {
     maintainAspectRatio: false,
     responsive: true,
     elements: {
@@ -117,7 +118,6 @@ export default function LineChart({ days = 7, chartData }: Props) {
       mode: "index",
       intersect: false,
     },
-    stacked: false,
     plugins: {
       legend: {
         position: "top" as const,
@@ -127,13 +127,13 @@ export default function LineChart({ days = 7, chartData }: Props) {
     },
     scales: {
       x: {
-        grid: { color: "rgba(15,23,42,0.04)", borderDash: [2, 2] },
+        grid: { color: "rgba(15,23,42,0.04)" },
       },
       y: {
         type: "linear" as const,
         display: true,
         position: "left" as const,
-        grid: { color: "rgba(15,23,42,0.04)", borderDash: [2, 2] },
+        grid: { color: "rgba(15,23,42,0.04)" },
       },
       y1: {
         type: "linear" as const,
@@ -142,7 +142,6 @@ export default function LineChart({ days = 7, chartData }: Props) {
         grid: {
           drawOnChartArea: false,
           color: "rgba(15,23,42,0.04)",
-          borderDash: [2, 2],
         },
       },
     },

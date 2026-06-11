@@ -5,7 +5,11 @@ export const sendMessage = async (
   text: string,
   chatId: string,
 ): Promise<{ userMessage: Message; aiMessage: Message; category: string }> => {
-  return apiClientFetch<any>(`/api/chats/${chatId}`, {
+  return apiClientFetch<{
+    userMessage: Message;
+    aiMessage: Message;
+    category: string;
+  }>(`/api/chats/${chatId}`, {
     method: "POST",
     body: JSON.stringify({ text }),
   });

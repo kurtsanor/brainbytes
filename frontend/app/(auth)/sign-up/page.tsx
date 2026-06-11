@@ -25,10 +25,10 @@ const SignUpPage = () => {
     },
   });
 
-  const onSubmit = async ({
-    confirmPassword: _confirmPassword,
-    ...payload
-  }: SignUpFormValues) => {
+  const onSubmit = async (values: SignUpFormValues) => {
+    const { confirmPassword, ...payload } = values;
+    void confirmPassword;
+
     try {
       const response = await signUp(payload);
       reset();

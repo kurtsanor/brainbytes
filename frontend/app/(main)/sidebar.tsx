@@ -3,6 +3,7 @@ import AccountMenu from "./account-menu";
 import { getUserConversations } from "@/lib/api/messages.server";
 import ChatList from "./chat-list";
 import Link from "next/link";
+import Image from "next/image";
 
 const Sidebar = async () => {
   const userDetails = await getMe();
@@ -14,9 +15,11 @@ const Sidebar = async () => {
       <header className="flex flex-col p-1.5">
         <div className="flex justify-between items-center w-full">
           <div className="flex items-center h-10 pl-1">
-            <img
+            <Image
               src="/bblogo1.png"
               alt="BrainBytes Logo"
+              width={28}
+              height={24}
               className="w-7 h-6 mr-1"
             />
             <h1 className="text-lg font-semibold tracking-tight scale-y-115 mt-1">

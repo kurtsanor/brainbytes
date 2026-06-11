@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    await jwtVerify(token, JWT_SECRET);
 
     // If token exists, let them pass
     return NextResponse.next();

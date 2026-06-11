@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { User } from "@/types/user.types";
 
 interface AccountMenuProps {
@@ -27,9 +28,11 @@ const AccountMenu = ({ user }: AccountMenuProps) => {
     <div className="flex items-center justify-between gap-1 p-2 hover:bg-neutral-100 cursor-pointer transition-colors rounded-lg group">
       {/* Left Side: User Info */}
       <div className="flex min-w-0 items-center gap-1">
-        <img
+        <Image
           src="/userpp.jpeg"
           alt="User Profile"
+          width={40}
+          height={40}
           className="h-10 w-10 shrink-0 flex-none mr-2 rounded-full object-cover"
         />
         <div className="flex min-w-0 flex-col">

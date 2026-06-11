@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { sendMessage } from "@/lib/api/messages.client";
 import { Message } from "@/types/message.types";
 import { User } from "@/types/user.types";
@@ -59,9 +60,14 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
     const isFirstMessage = !chatIdRef.current;
 
     setData((prevData) => {
-      const newMessage: any = {
+      const newMessage: Message = {
         _id: Date.now().toString(),
         text: message,
+        isUser: true,
+        metadata: {},
+        chatId: chatIdRef.current ?? "",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       return [...prevData, newMessage];
     });
@@ -102,7 +108,13 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
         {messagesList}
         {isTyping && (
           <div className="flex items-center justify-start mb-8 space-x-1 animate-pulse">
-            <img src="/bblogo1.png" alt="BrainBytes Logo" className="w-6 h-5" />
+            <Image
+              src="/bblogo1.png"
+              alt="BrainBytes Logo"
+              width={24}
+              height={20}
+              className="w-6 h-5"
+            />
             <p className="text-gray-500">BrainBytes is thinking...</p>
           </div>
         )}
@@ -124,9 +136,11 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
 const ChatHeader = ({ userDetails }: ChatHeaderProps) => {
   return (
     <>
-      <img
+      <Image
         src="/bblogo1.png"
         alt="BrainBytes Logo"
+        width={120}
+        height={120}
         className="w-30 h-30 mb-5"
       />
       <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-2 bg-linear-to-r from-blue-950 to-brand-blue bg-clip-text text-transparent">

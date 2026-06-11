@@ -1,7 +1,12 @@
+import type { User } from "@/types/user.types";
 import { apiServerFetch } from "./api-server";
 
-export const getMe = async (): Promise<any> => {
-  const response = await apiServerFetch("/api/auth/me", {
+export type MeResponse = {
+  user: User;
+};
+
+export const getMe = async (): Promise<MeResponse> => {
+  const response = await apiServerFetch<MeResponse>("/api/auth/me", {
     method: "GET",
   });
   return response;
