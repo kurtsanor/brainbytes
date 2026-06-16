@@ -97,14 +97,6 @@ export const googleAuthCallback = async (
       expiresIn: "1h",
     });
 
-    res.cookie("session-token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 60 * 60 * 1000,
-      path: "/",
-    });
-
     return res.redirect(
       `${process.env.FRONTEND_URL}/oauth?token=${encodeURIComponent(token)}`,
     );
@@ -135,14 +127,6 @@ export const githubAuthCallback = async (
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
       expiresIn: "1h",
-    });
-
-    res.cookie("session-token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 60 * 60 * 1000,
-      path: "/",
     });
 
     return res.redirect(

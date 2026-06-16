@@ -7,23 +7,34 @@ const OAuthPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get("token");
+    const handleOAuth = async () => {
+      const token = new URLSearchParams(window.location.search).get("token");
 
-    if (!token) {
-      console.log("No token found in query parameters: ", token);
-      // router.replace("/sign-in");
-      return;
-    }
+      if (!token) {
+        router.replace("/sign-in");
+        return;
+      }
 
-    localStorage.setItem("session-token", token);
-    // router.replace("/chat");
+      const response = await fetch("/api/auth/oauth-login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      if (!response.ok) {
+        router.replace("/sign-in");
+        return;
+      }
+
+      router.replace("/chat");
+    };
+
+    handleOAuth();
   }, [router]);
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-sm text-neutral-600">
-      Signing you in...
-    </div>
-  );
+  return <div>Signing you in...</div>;
 };
 
 export default OAuthPage;
