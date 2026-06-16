@@ -16,7 +16,7 @@ const AccountMenu = ({ user }: AccountMenuProps) => {
       });
 
       if (response.ok) {
-        localStorage.removeItem("authToken");
+        localStorage.removeItem("session-token");
         window.location.href = "/sign-in";
       }
     } catch (error) {

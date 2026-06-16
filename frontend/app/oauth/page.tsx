@@ -28,6 +28,8 @@ const OAuthPage = () => {
         return;
       }
 
+      const result = await response.json();
+      localStorage.setItem("session-token", result.token);
       router.replace("/chat");
     };
 
