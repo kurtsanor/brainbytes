@@ -99,8 +99,8 @@ export const googleAuthCallback = async (
 
     res.cookie("session-token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 60 * 60 * 1000,
       path: "/",
     });
@@ -139,8 +139,8 @@ export const githubAuthCallback = async (
 
     res.cookie("session-token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 60 * 60 * 1000,
       path: "/",
     });
