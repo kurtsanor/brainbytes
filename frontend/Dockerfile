@@ -23,6 +23,12 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3000
+
+ARG NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+
+RUN echo "BUILD URL=$NEXT_PUBLIC_API_BASE_URL"
+
 # run as non-root user
 RUN useradd --system --uid 1001 nextjs
 # copy only the built stuff, no source code
