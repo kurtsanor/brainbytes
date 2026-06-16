@@ -10,6 +10,7 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("session-token")?.value;
 
   if (!token) {
+    console.warn("No JWT token found in cookies. Redirecting to sign-in.");
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
