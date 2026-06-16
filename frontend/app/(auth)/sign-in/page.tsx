@@ -123,7 +123,7 @@ const SignInPage = () => {
       <button
         type="button"
         onClick={() =>
-          (window.location.href = "http://localhost:3001/api/auth/google")
+          (window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/google`)
         }
         className="border border-neutral-200 hover:bg-neutral-100 text-black p-1.5 mt-4 tracking-tight flex items-center justify-center gap-2 transition-colors"
       >
@@ -155,7 +155,7 @@ const SignInPage = () => {
       <button
         type="button"
         onClick={() =>
-          (window.location.href = "http://localhost:3001/api/auth/github")
+          (window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/github`)
         }
         className="border border-neutral-200 hover:bg-neutral-100 text-black p-1.5 mt-2 tracking-tight flex items-center justify-center gap-2 transition-colors"
       >

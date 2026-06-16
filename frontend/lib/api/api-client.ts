@@ -12,10 +12,7 @@ const getApiBaseUrl = (): string => {
     );
   }
 
-  return (
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    DEFAULT_CLIENT_API_BASE_URL
-  );
+  return process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_CLIENT_API_BASE_URL;
 };
 
 const buildApiUrl = (endpoint: string): string => {
