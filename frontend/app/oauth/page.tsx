@@ -16,7 +16,7 @@ const OAuthPage = () => {
     }
 
     localStorage.setItem("session-token", token);
-    router.replace("/chat");
+    // router.replace("/chat");
   }, [router]);
 
   return (
