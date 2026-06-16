@@ -34,7 +34,17 @@ const OAuthPage = () => {
     handleOAuth();
   }, [router]);
 
-  return <div>Signing you in...</div>;
+  return (
+    <div className="flex min-h-screen items-center justify-center px-6">
+      <div className="flex flex-col items-center">
+        <div className="h-6 w-6 animate-spin border-2 border-neutral-200 border-t-black" />
+
+        <p className="mt-4 text-sm tracking-tight text-neutral-600">
+          Signing you in...
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default OAuthPage;
