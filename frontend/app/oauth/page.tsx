@@ -10,7 +10,8 @@ const OAuthPage = () => {
     const token = new URLSearchParams(window.location.search).get("token");
 
     if (!token) {
-      router.replace("/sign-in");
+      console.log("No token found in query parameters: ", token);
+      // router.replace("/sign-in");
       return;
     }
 
