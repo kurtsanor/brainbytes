@@ -10,6 +10,12 @@ RUN npm ci
 FROM node:22-bookworm-slim AS builder
 WORKDIR /usr/src/app
 ENV NEXT_TELEMETRY_DISABLED=1
+
+ARG NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+
+RUN echo "BUILD URL=$NEXT_PUBLIC_API_BASE_URL"
+
 # reuse deps from first stage
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY . .
@@ -23,11 +29,6 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3000
-
-ARG NEXT_PUBLIC_API_BASE_URL
-ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
-
-RUN echo "BUILD URL=$NEXT_PUBLIC_API_BASE_URL"
 
 # run as non-root user
 RUN useradd --system --uid 1001 nextjs
