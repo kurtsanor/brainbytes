@@ -15,7 +15,7 @@ const OAuthPage = () => {
         return;
       }
 
-      const response = await fetch("/api/auth/oauth-login", {
+      const response = await fetch("/api/auth/oauth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
