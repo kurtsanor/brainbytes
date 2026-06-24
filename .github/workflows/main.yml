@@ -120,6 +120,10 @@ jobs:
         working-directory: ./frontend
         run: npm test
 
+      - name: Run Playwright tests
+        working-directory: ./frontend
+        run: npm run test:e2e
+
       - name: Upload frontend test results
         if: always()
         uses: actions/upload-artifact@v4
