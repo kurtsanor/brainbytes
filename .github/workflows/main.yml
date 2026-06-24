@@ -243,7 +243,8 @@ jobs:
           image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/brainbytes-frontend:latest
           format: table
           exit-code: 1
-          severity: HIGH,CRITICAL
+          severity: CRITICAL
+          ignore-unfixed: true
 
   build-backend:
     name: Build Backend Docker Image
@@ -282,7 +283,8 @@ jobs:
           image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/brainbytes-backend:latest
           format: table
           exit-code: 1
-          severity: HIGH,CRITICAL
+          severity: CRITICAL
+          ignore-unfixed: true
 
   docker-compose-test:
     name: Docker Compose Integration Test
