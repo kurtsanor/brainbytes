@@ -112,6 +112,10 @@ jobs:
         working-directory: ./frontend
         run: npm ci
 
+      - name: Run npm audit
+        working-directory: ./frontend
+        run: npm audit --audit-level=high
+
       - name: Run frontend tests
         working-directory: ./frontend
         run: npm test
@@ -144,6 +148,10 @@ jobs:
         working-directory: ./backend
         run: npm ci
 
+      - name: Run npm audit
+        working-directory: ./backend
+        run: npm audit --audit-level=high
+
       - name: Run backend tests
         working-directory: ./backend
         run: npm test
@@ -154,6 +162,36 @@ jobs:
         with:
           name: backend-test-results
           path: backend/test-results
+
+  codeql-analysis:
+    name: CodeQL Security Analysis
+    runs-on: ubuntu-latest
+
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
 
   build-frontend:
     name: Build Frontend Docker Image
