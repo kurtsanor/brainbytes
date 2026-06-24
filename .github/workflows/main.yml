@@ -193,6 +193,19 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
+  gitleaks:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+
   build-frontend:
     name: Build Frontend Docker Image
     needs:
@@ -218,6 +231,14 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Scan frontend image with Trivy
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: brainbytes/frontend:latest
+          format: table
+          exit-code: 1
+          severity: HIGH,CRITICAL
+
   build-backend:
     name: Build Backend Docker Image
     needs:
@@ -242,6 +263,14 @@ jobs:
           tags: brainbytes/backend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Scan backend image with Trivy
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: brainbytes/backend:latest
+          format: table
+          exit-code: 1
+          severity: HIGH,CRITICAL
 
   docker-compose-test:
     name: Docker Compose Integration Test
