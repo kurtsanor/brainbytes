@@ -246,6 +246,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/brainbytes-frontend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL_PROD }}
 
       - name: Scan frontend image with Trivy
         uses: aquasecurity/trivy-action@master
@@ -255,8 +257,6 @@ jobs:
           exit-code: 1
           severity: CRITICAL
           ignore-unfixed: true
-          build-args: |
-            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL_PROD }}
 
   build-backend:
     name: Build Backend Docker Image
