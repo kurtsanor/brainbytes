@@ -6,8 +6,21 @@ import chatRoutes from "./routes/chat.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
 import passport from "./config/passport.js";
 import cookieParser from "cookie-parser";
+import rateLimit from "express-rate-limit";
 
 const app = express();
+
+const requestRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({
+      error: "Too many requests, please try again later.",
+    });
+  },
+});
 
 /*
  * Allow the frontend origin to call the API with cookies enabled.
@@ -18,6 +31,7 @@ app.use(
     credentials: true,
   }),
 );
+app.use(requestRateLimiter);
 app.use(express.json());
 
 app.use(cookieParser());
