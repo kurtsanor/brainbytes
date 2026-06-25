@@ -243,7 +243,9 @@ jobs:
         with:
           context: ./frontend
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/brainbytes-frontend:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/brainbytes-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/brainbytes-frontend:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
@@ -257,6 +259,9 @@ jobs:
           exit-code: 1
           severity: CRITICAL
           ignore-unfixed: true
+
+      - name: Trigger Render Deploy (Frontend)
+        run: curl -X POST ${{ secrets.FRONTEND_RENDER_DEPLOY_HOOK }}
 
   build-backend:
     name: Build Backend Docker Image
@@ -285,7 +290,9 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/brainbytes-backend:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/brainbytes-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/brainbytes-backend:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -297,6 +304,9 @@ jobs:
           exit-code: 1
           severity: CRITICAL
           ignore-unfixed: true
+
+      - name: Trigger Render Deploy (Backend)
+        run: curl -X POST ${{ secrets.BACKEND_RENDER_DEPLOY_HOOK }}
 
   docker-compose-test:
     name: Docker Compose Integration Test
