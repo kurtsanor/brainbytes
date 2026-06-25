@@ -252,6 +252,8 @@ jobs:
           exit-code: 1
           severity: CRITICAL
           ignore-unfixed: true
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL_PROD }}
 
   build-backend:
     name: Build Backend Docker Image
