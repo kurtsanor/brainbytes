@@ -7,6 +7,14 @@ import analyticsRoutes from "./routes/analytics.routes.js";
 import passport from "./config/passport.js";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
+import {
+  register,
+  httpRequestsTotal,
+  activeUsersGauge,
+  mobileRequestsTotal,
+  estimatedDataUsageBytes,
+  intermittentConnectivityTotal,
+} from "./monitoring/metrics.js";
 
 const app = express();
 
@@ -31,10 +39,62 @@ app.use(
     credentials: true,
   }),
 );
+
 app.use(requestRateLimiter);
 app.use(express.json());
 
+/*
+ * Prometheus monitoring middleware.
+ * This only records metrics and does not modify existing API behavior.
+ */
+app.use((req, res, next) => {
+  const start = process.hrtime();
+
+  activeUsersGauge.inc();
+
+  const userAgent = req.headers["user-agent"] ?? "";
+  if (/mobile|android|iphone|ipad/i.test(String(userAgent))) {
+    mobileRequestsTotal.inc();
+  }
+
+  res.on("finish", () => {
+    const diff = process.hrtime(start);
+    const durationSeconds = diff[0] + diff[1] / 1e9;
+
+    const route = req.route?.path ?? req.path;
+
+    httpRequestsTotal.inc({
+      method: req.method,
+      route,
+      status_code: String(res.statusCode),
+    });
+
+    const contentLength = Number(res.getHeader("content-length") ?? 0);
+    estimatedDataUsageBytes.inc(
+      { route },
+      Number.isFinite(contentLength) ? contentLength : 0,
+    );
+
+    activeUsersGauge.dec();
+
+    if (res.statusCode >= 500 || res.statusCode === 408) {
+      intermittentConnectivityTotal.inc();
+    }
+  });
+
+  next();
+});
+
+/*
+ * Prometheus metrics endpoint.
+ */
+app.get("/metrics", async (_req, res) => {
+  res.set("Content-Type", register.contentType);
+  res.end(await register.metrics());
+});
+
 app.use(cookieParser());
+
 /*
  * Passport is used for OAuth-based sign-in flows.
  */

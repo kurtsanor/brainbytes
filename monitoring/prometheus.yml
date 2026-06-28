@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "alert_rules.yml"
+  - "recording_rules.yml"
+
+scrape_configs:
+  - job_name: "brainbytes-backend"
+    metrics_path: "/metrics"
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    static_configs:
+      - targets: ["backend:3001"]
+        labels:
+          service: "backend"
+          app: "brainbytes"
+
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]
