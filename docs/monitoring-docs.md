@@ -55,7 +55,7 @@ The monitoring implementation aims to:
 
 ## Architecture Diagram
 
-> _(Insert monitoring architecture diagram here.)_
+> <img width="119" height="512" alt="image" src="https://github.com/user-attachments/assets/65fbb8b3-ce22-498a-86b8-190c3e300395" />
 
 Example flow:
 
@@ -267,12 +267,14 @@ Prometheus continuously scrapes the backend `/metrics` endpoint and stores colle
 
 Include screenshots demonstrating:
 
-- Prometheus Targets page
-- Prometheus Graph page
-- Loaded Recording Rules
-- Active Alert Rules
-- Metrics endpoint
-- Running Docker containers
+<img width="512" height="139" alt="image" src="https://github.com/user-attachments/assets/afe557f4-8f60-4190-aba5-c84f733922b4" />
+
+<img width="512" height="275" alt="image" src="https://github.com/user-attachments/assets/bcf078b3-d3a4-4444-9f59-47ab3e696e33" />
+
+<img width="512" height="153" alt="image" src="https://github.com/user-attachments/assets/f30a94cf-956d-4d61-ae2c-1aacc75c4fe9" />
+
+<img width="512" height="292" alt="image" src="https://github.com/user-attachments/assets/1a93245d-6ede-4c17-b7ae-0ffe792c9a8f" />
+
 
 ---
 
