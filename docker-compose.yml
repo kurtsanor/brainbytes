@@ -78,6 +78,23 @@ services:
       timeout: 5s
       retries: 5
 
+  # Prometheus monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: brainbytes-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+      - ./monitoring/recording_rules.yml:/etc/prometheus/recording_rules.yml:ro
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
 # keep data between restarts
 volumes:
   mongo-data:

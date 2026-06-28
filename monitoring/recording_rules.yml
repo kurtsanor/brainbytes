@@ -1,0 +1,8 @@
+groups:
+  - name: brainbytes-recording-rules
+    rules:
+      - record: brainbytes:backend_memory_mb
+        expr: process_resident_memory_bytes{job="brainbytes-backend"} / 1024 / 1024
+
+      - record: brainbytes:ai_response_avg_seconds
+        expr: rate(brainbytes_ai_response_duration_seconds_sum[5m]) / rate(brainbytes_ai_response_duration_seconds_count[5m])
