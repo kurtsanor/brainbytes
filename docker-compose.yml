@@ -95,6 +95,24 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  # Grafana dashboard
+  grafana:
+    image: grafana/grafana:9.5.2
+    container_name: brainbytes-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=brainbytes
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_DATE_FORMATS_DEFAULT_TIMEZONE=Asia/Manila
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
 # keep data between restarts
 volumes:
   mongo-data:
+  grafana-data:
