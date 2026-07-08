@@ -17,10 +17,23 @@ The BrainBytes monitoring system uses Grafana dashboards integrated with Prometh
 ### Dashboard Screenshots
 
 - **Figure 1.** BrainBytes – System Overview
+<img width="512" height="217" alt="image" src="https://github.com/user-attachments/assets/bd9d2347-e20b-494d-848e-10ffdbcef8a9" />
+
 - **Figure 2.** BrainBytes – Application Performance
+<img width="512" height="230" alt="image" src="https://github.com/user-attachments/assets/97912bf0-4d54-459d-a230-6f091f388447" />
+
+
 - **Figure 3.** BrainBytes – Error Analysis
+<img width="512" height="230" alt="image" src="https://github.com/user-attachments/assets/d561e7f7-1178-49e2-a4ff-ad9ab287aa43" />
+
+  
 - **Figure 4.** BrainBytes – Resource Optimization
+<img width="512" height="231" alt="image" src="https://github.com/user-attachments/assets/1fbeb066-6c32-4754-aa30-87e864101307" />
+
+  
 - **Figure 5.** BrainBytes – User Experience
+<img width="512" height="231" alt="image" src="https://github.com/user-attachments/assets/73a827d6-8645-4aeb-be18-2b9478e4fd31" />
+
 
 ---
 
@@ -99,3 +112,5 @@ The BrainBytes monitoring system integrates **Prometheus** and **Grafana** to pr
 The monitoring architecture enables administrators and developers to observe system behavior, detect anomalies, and respond to performance issues before they affect end users.
 
 ### 4.2 Monitoring Architecture Diagram
+<img width="147" height="512" alt="image" src="https://github.com/user-attachments/assets/f12c7a19-11f9-450d-a665-6df9f3644905" />
+
