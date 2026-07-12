@@ -2,6 +2,7 @@ import Message from "../models/message.model.js";
 import type { MessageDto } from "../types/message.types.js";
 import * as aiService from "./ai.service.js";
 import * as chatService from "./chat.service.js";
+import { dbQueryDuration } from "../monitoring/metrics.js";
 
 /**
  * Persist a user prompt, generate an AI reply, and link both messages to a chat session.
@@ -10,7 +11,6 @@ import * as chatService from "./chat.service.js";
  * @param chatId - The chat identifier, or null when a new chat should be created.
  * @param userId - The authenticated user's database identifier.
  * @returns A promise that resolves to the created user and AI messages.
- * @throws If the chat lookup, AI generation, or persistence fails.
  */
 export const createMessage = async (
   text: string,
@@ -50,10 +50,17 @@ export const createMessage = async (
     }
 
     // Save user message
+    const endUserInsert = dbQueryDuration.startTimer();
+
     const userMessage = await Message.create({
       text,
       isUser: true,
       chatId,
+    });
+
+    endUserInsert({
+      operation: "insert",
+      collection: "messages",
     });
 
     // Generate AI response with a 60-second overall timeout
@@ -61,10 +68,8 @@ export const createMessage = async (
       timeoutId = setTimeout(() => reject(new Error("Request timeout")), 60000);
     });
 
-    // Get the response from the AI service
     const aiResultPromise = aiService.generateResponse(text);
 
-    // Race between the AI response and the timeout
     const aiResult: { category: string; response: string } | any =
       await Promise.race([aiResultPromise, timeoutPromise]).catch((error) => {
         console.error("AI response timed out or failed:", error);
@@ -80,15 +85,20 @@ export const createMessage = async (
     });
 
     // Save AI response
+    const endAiInsert = dbQueryDuration.startTimer();
+
     const aiMessage = await Message.create({
       text: aiResult.response,
       isUser: false,
       chatId,
     });
 
+    endAiInsert({
+      operation: "insert",
+      collection: "messages",
+    });
+
     return { userMessage, aiMessage, category: aiResult.category };
-  } catch (error) {
-    throw error;
   } finally {
     clearTimeout(timeoutId);
   }
@@ -100,24 +110,28 @@ export const createMessage = async (
  * @param chatId - The chat identifier to query.
  * @param userId - The authenticated user's database identifier.
  * @returns A promise that resolves to the chat messages in chronological order.
- * @throws If the chat does not exist, does not belong to the user, or the query fails.
  */
 export const findMessagesByChatId = async (chatId: string, userId: string) => {
+  // Check if chat exists
+  const chat = await chatService.findChatById(chatId);
+  if (!chat) {
+    throw new Error("Chat not found");
+  }
+
+  // Check also if it belongs to the logged in user
+  if (chat.userId.toString() !== userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const end = dbQueryDuration.startTimer();
+
   try {
-    // Check if chat exists
-    const chat = await chatService.findChatById(chatId);
-    if (!chat) {
-      throw new Error("Chat not found");
-    }
-
-    // Check also if it belongs to the logged in user
-    if (chat.userId.toString() !== userId) {
-      throw new Error("Unauthorized");
-    }
-
     return await Message.find({ chatId }).sort({ createdAt: 1 });
-  } catch (error) {
-    throw error;
+  } finally {
+    end({
+      operation: "find",
+      collection: "messages",
+    });
   }
 };
 
@@ -125,13 +139,17 @@ export const findMessagesByChatId = async (chatId: string, userId: string) => {
  * Return every stored message in chronological order.
  *
  * @returns A promise that resolves to all messages sorted by creation time.
- * @throws If the database query fails.
  */
 export const findAllMessages = async () => {
+  const end = dbQueryDuration.startTimer();
+
   try {
     return await Message.find().sort({ createdAt: 1 });
-  } catch (error) {
-    throw error;
+  } finally {
+    end({
+      operation: "find",
+      collection: "messages",
+    });
   }
 };
 
@@ -140,19 +158,23 @@ export const findAllMessages = async () => {
  *
  * @param userId - The authenticated user's database identifier.
  * @returns A promise that resolves to the total number of user messages.
- * @throws If the chat or message query fails.
  */
 export const getTotalMessagesSentByUserId = async (userId: string) => {
+  // Get all chats for the user
+  const chats = await chatService.findChatsByUserId(userId);
+  const chatIds = chats.map((chat) => chat._id);
+
+  const end = dbQueryDuration.startTimer();
+
   try {
-    // Get all chats for the user
-    const chats = await chatService.findChatsByUserId(userId);
-    const chatIds = chats.map((chat) => chat._id);
-    // Count messages that belong to those chats
     return await Message.countDocuments({
       chatId: { $in: chatIds },
       isUser: true,
     });
-  } catch (error) {
-    throw error;
+  } finally {
+    end({
+      operation: "count",
+      collection: "messages",
+    });
   }
 };

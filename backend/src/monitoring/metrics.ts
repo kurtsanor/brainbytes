@@ -8,6 +8,13 @@ export const httpRequestsTotal = new client.Counter({
   labelNames: ["method", "route", "status_code"],
 });
 
+export const httpRequestDuration = new client.Histogram({
+  name: "brainbytes_http_request_duration_seconds",
+  help: "HTTP request duration",
+  labelNames: ["method", "route", "status_code"],
+  buckets: [0.05, 0.1, 0.3, 0.5, 1, 2, 5],
+});
+
 export const activeUsersGauge = new client.Gauge({
   name: "brainbytes_active_users",
   help: "Estimated number of currently active users",
@@ -33,6 +40,13 @@ export const estimatedDataUsageBytes = new client.Counter({
 export const intermittentConnectivityTotal = new client.Counter({
   name: "brainbytes_intermittent_connectivity_events_total",
   help: "Estimated intermittent connectivity events based on failed or aborted requests",
+});
+
+export const dbQueryDuration = new client.Histogram({
+  name: "brainbytes_db_query_duration_seconds",
+  help: "Duration of database queries in seconds",
+  labelNames: ["operation", "collection"],
+  buckets: [0.005, 0.01, 0.05, 0.1, 0.5, 1, 2],
 });
 
 export const register = client.register;

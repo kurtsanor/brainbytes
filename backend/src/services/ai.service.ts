@@ -1,8 +1,10 @@
 import { huggingFaceAxios } from "../config/axios.js";
+import { aiResponseDuration } from "../monitoring/metrics.js";
 
 // Default chat model used for Hugging Face requests (Flash = lower cost than Pro)
 const DEFAULT_HUGGINGFACE_CHAT_MODEL =
   "meta-llama/Llama-3.1-8B-Instruct:cheapest";
+
 /**
  * Initialize the AI client and report whether the Hugging Face token is present.
  *
@@ -38,6 +40,7 @@ export const generateTopicTitle = async (prompt: string): Promise<string> => {
     model: DEFAULT_HUGGINGFACE_CHAT_MODEL,
     stream: false,
   });
+
   return response.data.choices[0].message.content;
 };
 
@@ -51,7 +54,6 @@ export const generateTopicTitle = async (prompt: string): Promise<string> => {
 export const generateResponse = async (
   question: string,
 ): Promise<{ category: string; response: string }> => {
-  // Define categories based on content
   const lowerQuestion = question.toLowerCase();
 
   const isMath =
@@ -74,14 +76,11 @@ export const generateResponse = async (
     lowerQuestion.includes("water") ||
     lowerQuestion.includes("chemical");
 
-  // Determine the category based on keyword matching
   let category = "general";
   if (isMath) category = "math";
   if (isHistory) category = "history";
   if (isScience) category = "science";
 
-  // Check for direct matches to provide immediate responses without API call
-  // This will bypass the API call for common questions we know will work
   if (lowerQuestion === "what is 1+1" || lowerQuestion === "1+1") {
     return {
       category: "math",
@@ -105,31 +104,10 @@ export const generateResponse = async (
     };
   }
 
-  // Use AbortController for timeout
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+  const timeoutId = setTimeout(() => controller.abort(), 60000);
 
   try {
-    // const systemInstruction = {
-    //   parts: [
-    //     {
-    //       text: "Act as a plain-text generator. Provide your response as a single, continuous string of text without any Markdown formatting. Do not use bold (), italics (*), headers (#), bullet points, or numbered lists. Do not include a title or introduction. Provide only the direct answer in a conversational tone suitable for a standard paragraph tag.**",
-    //     },
-    //   ],
-    // };
-    // const response = await geminiAxios.post(
-    //   "/models/gemini-3.1-flash-lite-preview:generateContent",
-    //   {
-    //     systemInstruction,
-    //     contents: [{ parts: [{ text: question }] }],
-    //     generationConfig: {
-    //       thinkingConfig: {
-    //         thinkingLevel: "low",
-    //       },
-    //     },
-    //   },
-    //   { signal: controller.signal },
-    // );
     const systemInstruction =
       "Act as an expert AI Tutor for the BrainBytes platform. " +
       "Since you do not have access to conversation history, treat every prompt as a new lesson. " +
@@ -143,36 +121,36 @@ export const generateResponse = async (
       "Add a new line after each section to improve readability. " +
       "Structure the response to be visually engaging and easy to digest, avoiding dense walls of text.";
 
-    const response = await huggingFaceAxios.post("/chat/completions", {
-      messages: [
-        { role: "system", content: systemInstruction },
-        {
-          role: "user",
-          content: question,
-        },
-      ],
-      model: DEFAULT_HUGGINGFACE_CHAT_MODEL,
-      stream: false,
-    });
+    // Start measuring only the AI API call
+    const end = aiResponseDuration.startTimer();
 
-    if (response.status !== 200) {
+    try {
+      const response = await huggingFaceAxios.post("/chat/completions", {
+        messages: [
+          { role: "system", content: systemInstruction },
+          {
+            role: "user",
+            content: question,
+          },
+        ],
+        model: DEFAULT_HUGGINGFACE_CHAT_MODEL,
+        stream: false,
+      });
+
+      if (response.status !== 200) {
+        return {
+          category,
+          response: getDetailedResponse(category, question),
+        };
+      }
+
       return {
         category,
-        response: getDetailedResponse(category, question),
+        response: response.data.choices[0].message.content,
       };
+    } finally {
+      end();
     }
-
-    // Hugging face response format
-    return {
-      category,
-      response: response.data.choices[0].message.content,
-    };
-
-    // Gemini Response Format
-    // return {
-    //   category,
-    //   response: response.data.candidates[0].content.parts[0].text,
-    // };
   } catch (error) {
     console.error("Error generating AI response:", error);
     throw error;

@@ -14,6 +14,7 @@ import {
   mobileRequestsTotal,
   estimatedDataUsageBytes,
   intermittentConnectivityTotal,
+  httpRequestDuration,
 } from "./monitoring/metrics.js";
 
 const app = express();
@@ -40,7 +41,7 @@ app.use(
   }),
 );
 
-app.use(requestRateLimiter);
+// app.use(requestRateLimiter);
 app.use(express.json());
 
 /*
@@ -48,7 +49,7 @@ app.use(express.json());
  * This only records metrics and does not modify existing API behavior.
  */
 app.use((req, res, next) => {
-  const start = process.hrtime();
+  const end = httpRequestDuration.startTimer();
 
   activeUsersGauge.inc();
 
@@ -58,10 +59,7 @@ app.use((req, res, next) => {
   }
 
   res.on("finish", () => {
-    const diff = process.hrtime(start);
-    const durationSeconds = diff[0] + diff[1] / 1e9;
-
-    const route = req.route?.path ?? req.path;
+    const route = req.baseUrl + (req.route?.path ?? "");
 
     httpRequestsTotal.inc({
       method: req.method,
@@ -80,6 +78,12 @@ app.use((req, res, next) => {
     if (res.statusCode >= 500 || res.statusCode === 408) {
       intermittentConnectivityTotal.inc();
     }
+
+    end({
+      method: req.method,
+      route,
+      status_code: String(res.statusCode),
+    });
   });
 
   next();
@@ -107,6 +111,40 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/analytics", analyticsRoutes);
+
+// API to trigger test conditions
+// import { Worker } from "worker_threads";
+
+// app.get("/trigger-cpu", (req, res) => {
+//   const duration = Number(req.query.duration || 60);
+//   const workers = Number(req.query.workers || 6);
+
+//   for (let i = 0; i < workers; i++) {
+//     const worker = new Worker(
+//       `
+//       const { workerData } = require('worker_threads');
+
+//       const end = Date.now() + workerData.duration * 1000;
+
+//       while (Date.now() < end) {
+//         for (let i = 0; i < 1000000; i++) {
+//           Math.random() * Math.random();
+//         }
+//       }
+//       `,
+//       {
+//         eval: true,
+//         workerData: {
+//           duration,
+//         },
+//       },
+//     );
+
+//     worker.on("error", console.error);
+//   }
+
+//   res.send(`Started ${workers} CPU worker(s) for ${duration} second(s).`);
+// });
 
 /*
  * Centralized error handler keeps API responses consistent.
