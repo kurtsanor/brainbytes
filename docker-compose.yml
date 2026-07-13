@@ -106,6 +106,14 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=brainbytes
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_DATE_FORMATS_DEFAULT_TIMEZONE=Asia/Manila
+
+      # SMTP
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp.gmail.com:587
+      - GF_SMTP_USER=${USER_EMAIL}
+      - GF_SMTP_PASSWORD=${GRAFANA_APP_PASSWORD}
+      - GF_SMTP_FROM_ADDRESS=${USER_EMAIL}
+      - GF_SMTP_FROM_NAME=BrainBytes Monitoring
     volumes:
       - grafana-data:/var/lib/grafana
     depends_on:

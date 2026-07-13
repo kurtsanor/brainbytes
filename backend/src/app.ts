@@ -41,7 +41,7 @@ app.use(
   }),
 );
 
-// app.use(requestRateLimiter);
+app.use(requestRateLimiter);
 app.use(express.json());
 
 /*
