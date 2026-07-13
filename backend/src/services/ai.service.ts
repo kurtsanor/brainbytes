@@ -3,7 +3,7 @@ import { aiResponseDuration } from "../monitoring/metrics.js";
 
 // Default chat model used for Hugging Face requests (Flash = lower cost than Pro)
 const DEFAULT_HUGGINGFACE_CHAT_MODEL =
-  "meta-llama/Llama-3.1-8B-Instruct:cheapest";
+  "meta-llama/Llama-3.1-8B-Instruct:fastest";
 
 /**
  * Initialize the AI client and report whether the Hugging Face token is present.
