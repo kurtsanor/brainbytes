@@ -23,7 +23,7 @@ const Sidebar = async () => {
               className="w-7 h-6 mr-1"
             />
             <h1 className="text-lg font-semibold tracking-tight scale-y-115 mt-1">
-              BrainBytes
+              BrainBytes AI
             </h1>
           </div>
 
