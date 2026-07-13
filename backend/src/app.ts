@@ -19,17 +19,17 @@ import {
 
 const app = express();
 
-const requestRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-  handler: (req, res) => {
-    res.status(429).json({
-      error: "Too many requests, please try again later.",
-    });
-  },
-});
+// const requestRateLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   limit: 100,
+//   standardHeaders: true,
+//   legacyHeaders: false,
+//   handler: (req, res) => {
+//     res.status(429).json({
+//       error: "Too many requests, please try again later.",
+//     });
+//   },
+// });
 
 /*
  * Allow the frontend origin to call the API with cookies enabled.
@@ -41,7 +41,7 @@ app.use(
   }),
 );
 
-app.use(requestRateLimiter);
+// app.use(requestRateLimiter);
 app.use(express.json());
 
 /*
@@ -113,38 +113,38 @@ app.use("/api/chats", chatRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
 // API to trigger test conditions
-// import { Worker } from "worker_threads";
+import { Worker } from "worker_threads";
 
-// app.get("/trigger-cpu", (req, res) => {
-//   const duration = Number(req.query.duration || 60);
-//   const workers = Number(req.query.workers || 6);
+app.get("/trigger-cpu", (req, res) => {
+  const duration = Number(req.query.duration || 60);
+  const workers = Number(req.query.workers || 6);
 
-//   for (let i = 0; i < workers; i++) {
-//     const worker = new Worker(
-//       `
-//       const { workerData } = require('worker_threads');
+  for (let i = 0; i < workers; i++) {
+    const worker = new Worker(
+      `
+      const { workerData } = require('worker_threads');
 
-//       const end = Date.now() + workerData.duration * 1000;
+      const end = Date.now() + workerData.duration * 1000;
 
-//       while (Date.now() < end) {
-//         for (let i = 0; i < 1000000; i++) {
-//           Math.random() * Math.random();
-//         }
-//       }
-//       `,
-//       {
-//         eval: true,
-//         workerData: {
-//           duration,
-//         },
-//       },
-//     );
+      while (Date.now() < end) {
+        for (let i = 0; i < 1000000; i++) {
+          Math.random() * Math.random();
+        }
+      }
+      `,
+      {
+        eval: true,
+        workerData: {
+          duration,
+        },
+      },
+    );
 
-//     worker.on("error", console.error);
-//   }
+    worker.on("error", console.error);
+  }
 
-//   res.send(`Started ${workers} CPU worker(s) for ${duration} second(s).`);
-// });
+  res.send(`Started ${workers} CPU worker(s) for ${duration} second(s).`);
+});
 
 /*
  * Centralized error handler keeps API responses consistent.
