@@ -19,11 +19,15 @@ import {
 
 const app = express();
 
+// tell Express to trust Render's proxy so req.ip reflects the real client
+app.set("trust proxy", 1);
+
 const requestRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 100,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.path === "/metrics" || req.path === "/healthz",
   handler: (req, res) => {
     res.status(429).json({
       error: "Too many requests, please try again later.",

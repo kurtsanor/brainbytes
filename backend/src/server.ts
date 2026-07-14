@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 3001;
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the BrainBytes API" });
 });
+app.get("/healthz", (_req, res) => res.status(200).send("OK"));
 
 /*
  * Connect to MongoDB before accepting traffic.
