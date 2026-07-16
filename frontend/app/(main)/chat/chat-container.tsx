@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { sendMessage } from "@/lib/api/messages.client";
+import { refreshChatHistory } from "../chat-history";
 import { Message } from "@/types/message.types";
 import { User } from "@/types/user.types";
 import { useRouter } from "next/navigation";
@@ -84,7 +85,7 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
       setData((prevData) => [...prevData, response.aiMessage]);
       if (isFirstMessage) {
         router.replace(`/chat/${response.aiMessage.chatId}`); // Update URL to reflect the current chat session
-        window.dispatchEvent(new Event("brainbytes:chat-history-refresh"));
+        refreshChatHistory();
       }
     } catch (error) {
       console.error("Error sending message:", error);

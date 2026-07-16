@@ -3,21 +3,24 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import ChatContainer from "@/app/(main)/chat/chat-container";
 
-const { replaceMock, refreshMock, sendMessageMock } = vi.hoisted(() => ({
+const { replaceMock, refreshChatHistoryMock, sendMessageMock } = vi.hoisted(() => ({
   replaceMock: vi.fn(),
-  refreshMock: vi.fn(),
+  refreshChatHistoryMock: vi.fn(),
   sendMessageMock: vi.fn(),
 }));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
     replace: replaceMock,
-    refresh: refreshMock,
   }),
 }));
 
 vi.mock("@/lib/api/messages.client", () => ({
   sendMessage: sendMessageMock,
+}));
+
+vi.mock("@/app/(main)/chat-history", () => ({
+  refreshChatHistory: refreshChatHistoryMock,
 }));
 
 describe("ChatContainer", () => {
@@ -75,7 +78,7 @@ describe("ChatContainer", () => {
     await waitFor(() => {
       expect(sendMessageMock).toHaveBeenCalledWith("Test message", "");
       expect(replaceMock).toHaveBeenCalledWith("/chat/chat-123");
-      expect(refreshMock).toHaveBeenCalled();
+      expect(refreshChatHistoryMock).toHaveBeenCalled();
     });
 
     expect(await screen.findByText("Test message")).toBeInTheDocument();
