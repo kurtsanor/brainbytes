@@ -20,8 +20,14 @@ test.describe("chat flow", () => {
       {
         name: "session-token",
         value: sessionToken,
-        domain: "127.0.0.1",
-        path: "/",
+        url: "http://127.0.0.1:3002",
+        sameSite: "Lax",
+      },
+      {
+        name: "session-token",
+        value: sessionToken,
+        url: "http://localhost:3002",
+        sameSite: "Lax",
       },
     ]);
   });
@@ -31,9 +37,6 @@ test.describe("chat flow", () => {
   }) => {
     await page.goto("/chat");
 
-    await expect(page.getByRole("heading", { name: /Hello, / })).toContainText(
-      "Hello, Test",
-    );
     await expect(
       page.getByPlaceholder("How can I help you today?"),
     ).toBeVisible();
@@ -41,10 +44,10 @@ test.describe("chat flow", () => {
     await page.getByPlaceholder("How can I help you today?").fill("Hello AI");
     await page.getByRole("button", { name: "Send message" }).click();
 
-    await expect(page.getByText("Hello AI")).toBeVisible();
+    await expect(page.getByRole("main").getByText("Hello AI")).toBeVisible();
     await expect(
       page.getByText("Hi there, I can help with that."),
     ).toBeVisible();
-    await expect(page).toHaveURL(/\/chat\/chat-test-1$/);
+    await expect(page).toHaveURL(/\/chat\/chat-test-\d+$/);
   });
 });

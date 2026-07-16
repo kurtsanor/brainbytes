@@ -1,9 +1,10 @@
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";
 
-const backendPort = 3001;
-const frontendPort = 3000;
+const backendPort = 3003;
+const frontendPort = 3002;
 const backendBaseUrl = `http://127.0.0.1:${backendPort}`;
+const frontendOrigin = `http://127.0.0.1:${frontendPort}`;
 
 const state = {
   chats: [],
@@ -14,14 +15,14 @@ const state = {
 const json = (res, statusCode, payload) => {
   res.writeHead(statusCode, {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "http://127.0.0.1:3000",
+    "Access-Control-Allow-Origin": frontendOrigin,
     "Access-Control-Allow-Credentials": "true",
   });
   res.end(JSON.stringify(payload));
 };
 
 const allowCors = (req, res) => {
-  const origin = req.headers.origin || "http://127.0.0.1:3000";
+  const origin = req.headers.origin || frontendOrigin;
   res.setHeader("Access-Control-Allow-Origin", origin);
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -181,6 +182,7 @@ backend.listen(backendPort, "127.0.0.1", () => {
     stdio: "inherit",
     env: {
       ...process.env,
+      E2E_AUTH_BYPASS: "1",
       API_BASE_URL_SERVER: backendBaseUrl,
       API_BASE_URL: backendBaseUrl,
       NEXT_PUBLIC_API_BASE_URL: backendBaseUrl,
