@@ -3,11 +3,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import ChatContainer from "@/app/(main)/chat/chat-container";
 
-const { replaceMock, refreshChatHistoryMock, sendMessageMock } = vi.hoisted(() => ({
-  replaceMock: vi.fn(),
-  refreshChatHistoryMock: vi.fn(),
-  sendMessageMock: vi.fn(),
-}));
+const { replaceMock, refreshChatHistoryMock, sendMessageMock } = vi.hoisted(
+  () => ({
+    replaceMock: vi.fn(),
+    refreshChatHistoryMock: vi.fn(),
+    sendMessageMock: vi.fn(),
+  }),
+);
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
