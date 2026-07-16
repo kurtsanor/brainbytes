@@ -1,9 +1,9 @@
 import { getMe } from "@/lib/api/auth.server";
 import AccountMenu from "./account-menu";
 import { getUserConversations } from "@/lib/api/messages.server";
-import ChatList from "./chat-list";
 import Link from "next/link";
 import Image from "next/image";
+import ChatHistorySection from "./chat-history";
 
 const Sidebar = async () => {
   const userDetails = await getMe();
@@ -130,10 +130,7 @@ const Sidebar = async () => {
         </Link>
       </section>
       {/* Chat history */}
-      <nav className="flex flex-col flex-1 p-2 overflow-y-auto">
-        <p className="text-neutral-500 text-sm mb-1.5 ml-1.5">Recents</p>
-        <ChatList chats={chatHistory} />
-      </nav>
+      <ChatHistorySection initialChats={chatHistory} />
       {/* Sidebar footer */}
       <footer className="border-t border-neutral-200 p-1.5">
         <AccountMenu user={userDetails.user} />

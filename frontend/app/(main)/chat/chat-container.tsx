@@ -84,7 +84,7 @@ const ChatContainer = ({ messages, id, userDetails }: ChatContainerProps) => {
       setData((prevData) => [...prevData, response.aiMessage]);
       if (isFirstMessage) {
         router.replace(`/chat/${response.aiMessage.chatId}`); // Update URL to reflect the current chat session
-        router.refresh(); // Refresh after navigation so the sidebar/server tree re-renders with the new chat
+        window.dispatchEvent(new Event("brainbytes:chat-history-refresh"));
       }
     } catch (error) {
       console.error("Error sending message:", error);

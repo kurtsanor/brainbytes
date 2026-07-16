@@ -334,7 +334,7 @@
           "placement": "bottom",
           "showLegend": false
         },
-        "orientation": "vertical",
+        "orientation": "horizontal",
         "showValue": "auto",
         "stacking": "none",
         "tooltip": {
